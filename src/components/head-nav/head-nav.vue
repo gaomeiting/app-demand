@@ -32,11 +32,6 @@
                 </a-dropdown>
                 </div>
             </a-layout-header>
-            <a-layout-content>
-                <transition name="page-toggle">
-                    <router-view ref="page" />
-                </transition>
-            </a-layout-content>
         </a-layout>
 	
 </template>
