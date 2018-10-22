@@ -1,5 +1,5 @@
 <template>
-  <page-layout title="试音需求">
+  <page-layout title="订单详情">
     <a-card title="待开发项目"></a-card>
   </page-layout>
 </template>

@@ -1,8 +1,13 @@
 <template>
   <div>
+    <router-link to="/order/detail">123</router-link>
     <Exception v-if="error == 1"></Exception>
     <div class="fast" v-if="error == 0">
-
+      <a-table :columns="columns"
+               rowKey="id"
+               :dataSource="orderList"
+               :pagination="pagination">
+      </a-table>
     </div>
   </div>
 </template>
@@ -12,11 +17,12 @@
   import Exception from '../exception/500'
   import {handlerError} from 'api/catch'
   const columns = [
-    { title: '订单', dataIndex: 'id', key: 'id', scopedSlots: { customRender: 'id' },width:'20%' },
-    { title: '预计收益', dataIndex: 'incomeFrom', key: 'incomeFrom', scopedSlots: { customRender: 'incomeFrom' }},
-    { title: '结算收益', dataIndex: 'income', key: 'income', scopedSlots: { customRender: 'income' }},
-    { title: '状态', dataIndex: 'status', key: 'status' , scopedSlots: { customRender: 'status' }},
-    { title: '交付时间', dataIndex: 'deliveryTime', key: 'deliveryTime'},
+    { title: '订单号', dataIndex: 'id', key: 'id', scopedSlots: { customRender: 'id' }},
+    { title: '订单', dataIndex: 'title', key: 'title', scopedSlots: { customRender: 'title' }},
+    { title: '订单类型', dataIndex: 'incomeFrom', key: 'incomeFrom', scopedSlots: { customRender: 'incomeFrom' }},
+    { title: '订单金额', dataIndex: 'income', key: 'income', scopedSlots: { customRender: 'income' }},
+    { title: '支付状态', dataIndex: 'status', key: 'status' , scopedSlots: { customRender: 'status' }},
+    { title: '配音状态', dataIndex: 'deliveryTime', key: 'deliveryTime'},
     { title: '操作' , key: 'click' , scopedSlots: { customRender: 'click' }}
   ];
   export default {
