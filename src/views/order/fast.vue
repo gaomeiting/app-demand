@@ -2,52 +2,7 @@
   <div>
     <Exception v-if="error == 1"></Exception>
     <div class="fast" v-if="error == 0">
-      <a-table :columns="columns"
-               rowKey="id"
-               :dataSource="orderList"
-               :pagination="pagination">
-      <span
-        class="details_id"
-        slot="id"
-        @click="toFastDetail(record.id)"
-        slot-scope="id, record" >{{record.title}}</span>
-        <!--预计收益-->
-        <div slot="incomeFrom"
-             slot-scope="incomeFrom, record" >{{record.incomeFrom}}~{{record.incomeTo}}元</div>
-        <!--状态-->
-        <div slot="status"
-             slot-scope="status, record" >
-          <span v-if="record.status == 0 ">未开始</span>
-          <span v-if="record.status == 1 ">进行中</span>
-          <span v-if="record.status == 9 ">已结束</span>
-          <span v-if="record.status == 8 ">已取消</span>
-        </div>
-        <!--结算收益-->
-        <div slot="income"
-             slot-scope="income, record" >
-          <span v-if="income == 0"> </span>
-          <span v-if="income != 0">{{income}}元</span>
-        </div>
-        <div slot="click"
-             slot-scope="text, record">
-          <p class="details_no" v-if="record.voiceStatus == 1">上传音频</p>
-          <a-upload name="file"
-                    v-if="record.voiceStatus == 0"
-                    class="details_click"
-                    :beforeUpload="beforeUpload"
-                    :showUploadList="isSuccse"
-                    @change="handleChange"
-                    :action="'api/order/'+ record.id +'/upload'">
-            <p class="updata_text">上传音频</p>
-          </a-upload>
-        </div>
 
-        <!--<span
-          class="details_click"
-          slot="click"
-          @click="toFastDetail(record.id)"
-          slot-scope="text, record" >查看详情</span>-->
-      </a-table>
     </div>
   </div>
 </template>
@@ -130,7 +85,7 @@
       },
     },
     mounted(){
-      axios.get('api/order?status').then(res => {
+      /*axios.get('api/order?status').then(res => {
         this.orderList = res.data.data
       }).catch(err => {
         const errorStatus = err.response.status
@@ -139,7 +94,7 @@
         }else{
           handlerError(err.response.data)
         }
-      })
+      })*/
     },
   }
 

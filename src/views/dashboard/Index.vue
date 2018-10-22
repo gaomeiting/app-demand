@@ -2,7 +2,21 @@
   <div>
     <!--<Exception></Exception>-->
     <div class="dashboard">
-
+      <div class="header">
+        <div class="header_left">
+          <img src="@/assets/logo.png" class="avatar" alt="姓名">
+          <div class="header_message">
+            <div class="message_people">
+              <h2 class="name">姓名</h2>
+            </div>
+            <span class="intro">23</span>
+          </div>
+        </div>
+        <div class="header_right">
+          <a-icon type="form" />
+          <span>发布需求</span>
+        </div>
+      </div>
 
     </div>
   </div>
@@ -54,6 +68,8 @@ export default {
     display: flex;
     justify-content: space-between;
     .header_left{
+      width: 80%;
+      background: #773f1e;
       display: flex;
       align-items: flex-end;
       .avatar{
@@ -79,50 +95,15 @@ export default {
       }
     }
     .header_right{
-      width: 45%;
-      display: flex;
+      background: #0366de;
+      width: 20%;
+      border: 1px solid #aeaeae;
+      padding: 10px 0;
+
+      /*display: flex;
       align-items: flex-end;
-      justify-content: flex-end;
+      justify-content: flex-end;*/
       letter-spacing:3px;
-      .right_icon{
-        font-size: 20px;
-        color: #222222;
-      }
-      .right_number{
-        font-size: 52px;
-        color: #222222;
-        margin-bottom: -4px;
-      }
-    }
-  }
-  .content{
-    height: 160px;
-    margin: 20px;
-    display: flex;
-    justify-content: space-between;
-    .numbers{
-      width: 24%;
-      background: #ffffff;
-      border-radius: 4px;
-      box-shadow: #c1c1c1 2px 1px 15px;
-      padding: 20px 0;
-      .text{
-        width: 100%;
-        margin-top: 20px;
-        text-align: center;
-      }
-      .number{
-        text-align: center;
-        font-size: 42px;
-        color: #222222;
-      }
-    }
-  }
-  .banner{
-    margin: 0px 20px;
-    .banner_img{
-      width: 100%;
-      border-radius: 4px;
     }
   }
 </style>
