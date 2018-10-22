@@ -1,47 +1,8 @@
 <template>
   <div>
-    <Exception v-if="error == 1"></Exception>
-    <div class="dashboard" v-if="error == 0">
-      <div class="header">
-        <div class="header_left">
-          <img :src="dashboardMes.avatar" class="avatar" alt="姓名">
-          <div class="header_message">
-            <div class="message_people">
-              <h2 class="name">{{dashboardMes.nickname}}</h2>
-              <img v-if="dashboardMes.dubberLevel == 0" class="level_icon" src="@/assets/level0.png" alt="">
-              <img v-if="dashboardMes.dubberLevel == 1" class="level_icon" src="@/assets/level1.png" alt="">
-              <img v-if="dashboardMes.dubberLevel == 2" class="level_icon" src="@/assets/level2.png" alt="">
-            </div>
-            <span class="intro">{{dashboardMes.slogan}}</span>
-          </div>
-        </div>
-        <div class="header_right">
-          <span class="right_text">将要入账：</span>
-          <span class="right_icon">￥</span>
-          <span class="right_number">{{dashboardMes.incomeFrom}}~{{dashboardMes.incomeTo}}</span>
-        </div>
-      </div>
-      <div class="content">
-        <div class="numbers">
-          <p class="text">已入账（元）</p>
-          <p class="number">{{dashboardMes.income}}</p>
-        </div>
-        <div class="numbers">
-          <p class="text">进行中（订单）</p>
-          <p class="number">{{dashboardMes.doingOrder}}</p>
-        </div>
-        <div class="numbers">
-          <p class="text">已试音</p>
-          <p class="number">{{dashboardMes.bidCount}}</p>
-        </div>
-        <div class="numbers">
-          <p class="text">已中标</p>
-          <p class="number">{{dashboardMes.winBidCount}}</p>
-        </div>
-      </div>
-      <div class="banner">
-        <img class="banner_img" src="@/assets/banner.jpg" alt="">
-      </div>
+    <!--<Exception></Exception>-->
+    <div class="dashboard">
+
 
     </div>
   </div>
@@ -72,7 +33,7 @@ export default {
       }
   },
   mounted(){
-    axios.get('api/user/workPlatformInfo').then(res => {
+   /* axios.get('api/user/workPlatformInfo').then(res => {
       this.dashboardMes = res.data
       console.log( this.dashboardMes)
     }).catch(err => {
@@ -80,9 +41,9 @@ export default {
       if(errorStatus == '500'){
         this.error = 1
       }else{
-        handlerError(err.response.data)
+        //handlerError(err.response.data)
       }
-    })
+    })*/
   },
 }
 </script>

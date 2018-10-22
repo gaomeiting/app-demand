@@ -22,8 +22,8 @@
 
           <a-dropdown class="header-navbar-item">
             <span>
-              <a-avatar class="avatar" size="small" shape="circle" :src="user.avatar" style="vertical-align: middle; margin-right: 0.5em;" />
-              <span>{{user.nickname}}</span>
+              <!--<a-avatar class="avatar" size="small" shape="circle" :src="user.avatar" style="vertical-align: middle; margin-right: 0.5em;" />-->
+              <!--<span>{{user.nickname}}</span>-->
             </span>
             <a-menu style="width: 150px" slot="overlay">
               <a-menu-item key="1">
@@ -99,18 +99,7 @@ export default {
      ...mapGetters(['user'])
   },
   mounted(){
-    axios.get('api/notification/count').then(res => {
-      this.messageTotal = res.data
-    }).catch(err => {
-      const errorStatus = err.response.status
-      if(errorStatus == '401'){
-        this.$router.replace('/login')
 
-      }
-      if(errorStatus == '500'){
-        this.error = 1
-      }
-    })
   },
 }
 </script>
