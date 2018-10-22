@@ -151,32 +151,10 @@ const routes = [
     }
 ]
 
-if (window.localStorage.getItem('user')) {
-    let user = JSON.parse(window.localStorage.getItem('user'))
-  store.commit('SET_LOGIN', user)
-}
+
 const router= new Router({
 routes : routes
 })
 
-router.beforeEach((to, from, next) => {
 
-  if (to.matched.some(r => r.meta.requireAuth)) {
-      if (store.state.user) {
-          next();
-      }
-      else {
-        axios('/api/user/userinfo').then(res => {
-          //window.alert(res.uid)
-          store.commit('SET_LOGIN', res.data);
-          next();
-        }).catch(err => {
-          handlerError(err.response.data)
-        })
-      }
-  }
-  else {
-      next();
-  }
-});
 export default router
