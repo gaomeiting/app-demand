@@ -9,24 +9,32 @@ import { handlerError } from 'api/catch';
 Vue.use(Router);
 
 const routes = [
+  /* 登录逻辑start */
     {
       path: "/login",
       name: "login",
       meta: {breadcrumbName: '登录', icon: 'login'},
       component: () => import("@/views/login/login")
     },
-    {
-      path: "/ongoing",
-      name: "ongoing",
-      meta: {breadcrumbName: '审核中', icon: 'ongoing'},
-      component: () => import("@/views/ongoing/ongoing")
-    },
-    {
-      path: "/code",
-      name: "code",
-      meta: {breadcrumbName: '公众号', icon: 'code'},
-      component: () => import("@/views/code/code")
-    },
+   /* 登录逻辑end */
+  /* 工作台模块start */
+  {
+    path: "/index",
+    meta: {breadcrumbName: '工作台', icon: 'dashboard'},
+    component: () => import("@/views/dashboard/dashboard"),
+    children: [{
+      path: '',
+      name: 'task',
+      meta: {breadcrumbName: '需求列表', icon: 'task'},
+      component: () => import("@/views/task/task"),
+    }, {
+      path: ':id',
+      name: 'taskDetails',
+      meta: {breadcrumbName: '需求详情', icon: 'taskDetails'},
+      component: () => import("@/views/taskDetails/taskDetails"),
+    }]
+  },
+  /* 工作台模块end */
     {
       path: "/",
       name: "home",
@@ -34,12 +42,6 @@ const routes = [
       redirect: "/index",
       component: MenuView,
       children: [
-        {
-          path: 'index',
-          name: 'dashboard',
-          meta: {breadcrumbName: '我的工作台', requireAuth: true},
-          component: () => import("@/views/dashboard/Index.vue")
-        },
         {
           path: '/order',
           name: 'order',
