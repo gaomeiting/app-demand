@@ -2,7 +2,7 @@
  * @Author: Cicy 
  * @Date: 2018-10-23 09:51:21 
  * @Last Modified by: Cicy.gao
- * @Last Modified time: 2018-10-23 18:12:22
+ * @Last Modified time: 2018-10-23 18:23:40
  */
 import axios from "axios";
 import Vue from "vue";
@@ -95,6 +95,12 @@ const routes = [
       name: "news",
       meta: {breadcrumbName: '消息中心', icon: 'news', requireAuth: true},
       component: () => import('@/views/news/news.vue')
+    },
+    {
+      path: "/success",
+      name: "success",
+      meta: {breadcrumbName: '订单支付', icon: 'news', requireAuth: true},
+      component: () => import('@/views/success/success.vue')
     }
 ]
 
