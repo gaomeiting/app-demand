@@ -76,7 +76,7 @@ const routes = [
         {
           path: '/wallet',
           name: 'wallet',
-          meta: {breadcrumbName: '我的钱包', requireAuth: true},
+          meta: {breadcrumbName: '资金管理', requireAuth: true},
           component:() => import('@/views/wallet/index.vue')
         },
       ]
