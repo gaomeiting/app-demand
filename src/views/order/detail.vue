@@ -1,8 +1,9 @@
 <template>
   <div class="order_detail">
+    <img src="@/assets/going.png" alt="" style="position: absolute;top: 0;right: 0;">
     <div class="title">
       <span class="title_title">标题：</span>
-      <span class="title_name">123</span>
+      <span class="title_name">标题字数测试标题字数测试标题字数测试标题字数测试标题字数测试标题字数测试标题字数测试标</span>
       <p class="dowload">
         <span style="font-size: 14px;margin-top: 15px">￥</span>
         678
@@ -95,6 +96,7 @@
 </script>
 <style lang="scss" scoped>
   .order_detail{
+    position: relative;
     background: #ffffff;
     min-height: 85vh;
     margin: 20px;
@@ -105,8 +107,8 @@
       position: relative;
       .dowload{
         position: absolute;
-        right: 0;
-        top: 5px;
+        right: 30px;
+        top: 0px;
         display: flex;
         align-items: center;
         color: #773F1E;
@@ -117,7 +119,7 @@
       }
       .title_name{
         font-size: 22px;
-        color: #222222
+        color: #222222;
       }
     }
     .ask{
