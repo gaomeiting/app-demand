@@ -32,3 +32,13 @@ html .ant-avatar :global {
 		min-height: 100%;
 	}
 }
+
+.fadePage-enter-active, .fadePage-leave-active {
+    opacity: 1;
+    transition: .3s linear;
+}
+
+.fadePage-enter, .fadePage-leave-active {
+    opacity: 0;
+    transition: .3s linear;
+}

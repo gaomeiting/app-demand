@@ -1,3 +1,9 @@
+/*
+ * @Author: Cicy 
+ * @Date: 2018-10-23 09:51:21 
+ * @Last Modified by:   Cicy.gao 
+ * @Last Modified time: 2018-10-23 09:51:21 
+ */
 import axios from "axios";
 import Vue from "vue";
 import Router from "vue-router";
@@ -9,14 +15,14 @@ import { handlerError } from 'api/catch';
 Vue.use(Router);
 
 const routes = [
-  /* 登录逻辑start */
+  /* 注册逻辑start */
     {
-      path: "/login",
-      name: "login",
-      meta: {breadcrumbName: '登录', icon: 'login'},
-      component: () => import("@/views/login/login")
+      path: "/regist",
+      name: "regist",
+      meta: {breadcrumbName: '注册', icon: 'regist'},
+      component: () => import("@/views/regist/regist")
     },
-   /* 登录逻辑end */
+   /* 注册逻辑end */
   /* 工作台模块start */
   {
     path: "/index",
@@ -35,6 +41,7 @@ const routes = [
     }]
   },
   /* 工作台模块end */
+
     {
       path: "/",
       name: "home",
