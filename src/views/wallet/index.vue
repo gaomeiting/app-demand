@@ -1,5 +1,5 @@
 <template>
-  <page-layout title="结算中心">
+  <page-layout title="资金管理">
     <a-card title="待开发项目"></a-card>
   </page-layout>
 </template>
