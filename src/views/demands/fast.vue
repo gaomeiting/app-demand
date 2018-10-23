@@ -75,7 +75,7 @@
       </div>
       <!--选择性别-->
       <div class="right_gender">
-        <p class="gender_title"><span class="color">*</span>交付时间</p>
+        <p class="gender_title"><span class="color">*</span>性别要求</p>
         <div class="gender_choose">
           <a-radio-group class="gender_radio"
                          name="radioGroup"
@@ -88,7 +88,7 @@
       </div>
       <!--选择语速-->
       <div class="right_speed">
-        <p class="gender_title"><span class="color">*</span>交付时间</p>
+        <p class="gender_title"><span class="color">*</span>期望语速</p>
         <div class="gender_choose">
           <a-radio-group class="gender_radio"
                          name="radioGroup"
@@ -101,7 +101,7 @@
         </div>
       </div>
       <div class="right_style">
-        <p class="gender_title"><span class="color">*</span>交付时间</p>
+        <p class="gender_title"><span class="color">&nbsp;</span>期望风格</p>
         <div class="gender_choose">
           <a-radio-group class="identity_radio"
                          name="radioGroup"
@@ -124,7 +124,7 @@
         </div>
       </div>
       <div class="right_speed">
-        <p class="gender_title"><span class="color">*</span>交付时间</p>
+        <p class="gender_title"><span class="color">*</span>主播等级</p>
         <div class="gender_choose">
           <a-radio-group class="gender_radio"
                          name="radioGroup"
@@ -137,7 +137,7 @@
         </div>
       </div>
       <div class="right_speed">
-        <p class="gender_title"><span class="color">*</span>交付时间</p>
+        <p class="gender_title"><span class="color">&nbsp;</span>是否试音</p>
         <div class="gender_choose">
           <a-radio-group class="gender_radio"
                          name="radioGroup"
@@ -146,18 +146,17 @@
                          disabled
                          size="small">
             <a-radio :value=0>试音</a-radio>
-            <a-radio :value=1 >不试音</a-radio>
           </a-radio-group>
         </div>
       </div>
       <div class="right_speed">
-        <p class="gender_title"><span class="color">*</span>交付时间</p>
+        <p class="gender_title"><span class="color">*</span>试音要求</p>
         <div class="gender_choose">
           <a-input placeholder="简单描述您的配音要求，少于50字"/>
         </div>
       </div>
       <div class="right_text">
-        <p class="gender_title"><span class="color">*</span>交付时间</p>
+        <p class="gender_title"><span class="color">*</span>试音文稿</p>
         <div class="gender_choose">
           <a-textarea
             class="text_textarea"
@@ -167,6 +166,18 @@
             :autosize="{ minRows: 5, maxRows: 5}" />
         </div>
       </div>
+      <div class="right_speed" style="margin-top: 30px">
+        <p class="gender_title"><span class="color">*</span>试音期限</p>
+        <div class="gender_choose">
+          <a-select placeholder="请选择试音期限" style="width: 100%" @change="changeUseful">
+            <a-select-option :value=1>2小时</a-select-option>
+            <a-select-option :value=2>4小时</a-select-option>
+            <a-select-option :value=3>10小时</a-select-option>
+            <a-select-option :value=4>24小时</a-select-option>
+          </a-select>
+        </div>
+      </div>
+      <p class="right_publish">发布</p>
     </div>
   </div>
 </template>
@@ -195,6 +206,7 @@
         deliveryTime:'',
         level:'',
         tryText:'',
+        changeUseful:null
 
       }
     },
@@ -367,7 +379,7 @@
         }
       }
       .right_gender{
-        margin-top: 20px;
+        margin-top: 30px;
         height: 32px;
         display: flex;
         justify-content: space-between;
@@ -396,7 +408,7 @@
 
       }
       .right_speed{
-        margin-top: 10px;
+        margin-top: 30px;
         height: 32px;
         display: flex;
         justify-content: space-between;
@@ -425,8 +437,9 @@
 
       }
       .right_style{
-        margin-top: 10px;
-        height: 90px;
+        margin-top: 30px;
+        min-height: 60px;
+        max-height: 90px;
         display: flex;
         justify-content: space-between;
         align-items: flex-start;
@@ -453,7 +466,7 @@
 
       }
       .right_text{
-        margin-top: 20px;
+        margin-top: 30px;
         display: flex;
         justify-content: space-between;
         align-content: flex-start;
@@ -485,6 +498,17 @@
            }*/
         }
 
+      }
+      .right_publish{
+        background: #ffd101;
+        width: 300px;
+        margin: 0 auto;
+        height: 42px;
+        border-radius: 4px;
+        margin-top: 50px;
+        color: #333333;
+        line-height: 42px;
+        text-align: center;
       }
     }
   }
