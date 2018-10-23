@@ -30,6 +30,12 @@
           <span>资金管理</span>
         </router-link>
       </a-menu-item>
+      <a-menu-item key="news">
+        <router-link to="/news">
+          <a-icon type="dashboard" />
+          <span>消息中心</span>
+        </router-link>
+      </a-menu-item>
     </a-menu>
 </template>
 

@@ -1,8 +1,8 @@
 /*
  * @Author: Cicy 
  * @Date: 2018-10-23 09:51:21 
- * @Last Modified by:   Cicy.gao 
- * @Last Modified time: 2018-10-23 09:51:21 
+ * @Last Modified by: Cicy.gao
+ * @Last Modified time: 2018-10-23 18:12:22
  */
 import axios from "axios";
 import Vue from "vue";
@@ -41,7 +41,12 @@ const routes = [
     }]
   },
   /* 工作台模块end */
-
+  {
+    path: '/wallet',
+    name: 'wallet',
+    meta: {breadcrumbName: '资金管理', icon: 'wallet'},
+    component: () => import("@/views/wallet/index"),
+  },
     {
       path: "/",
       name: "home",
@@ -82,12 +87,7 @@ const routes = [
             },
           ]
         },
-        {
-          path: '/wallet',
-          name: 'wallet',
-          meta: {breadcrumbName: '资金管理', requireAuth: true},
-          component:() => import('@/views/wallet/index.vue')
-        },
+        
       ]
     },
     {
@@ -99,9 +99,32 @@ const routes = [
 ]
 
 
+if (window.localStorage.getItem('user')) {
+  let user = JSON.parse(window.localStorage.getItem('user'))
+store.commit('SET_LOGIN', user)
+}
 const router= new Router({
 routes : routes
 })
 
+router.beforeEach((to, from, next) => {
 
+if (to.matched.some(r => r.meta.requireAuth)) {
+    if (store.state.user) {
+        next();
+    }
+    else {
+      axios('/api/user/userinfo').then(res => {
+        //window.alert(res.uid)
+        store.commit('SET_LOGIN', res.data);
+        next();
+      }).catch(err => {
+        handlerError(err.response.data)
+      })
+    }
+}
+else {
+    next();
+}
+});
 export default router
