@@ -1,4 +1,5 @@
 <template>
+<transition name="fadePage" mode="out-in">
    <div class="page">
        <div class="head-wrap">
            <div class="logo">
@@ -41,17 +42,23 @@
                     <div class="no-result-wrap" v-if="list.length == 0 && !loading">
                         <no-result title="空空如也~~"></no-result>
                     </div>
+                    <div class="loading-wrap" v-if="loading">
+                        <loading></loading>
+                    </div>
+
                 </div>
             </div>
        </div>
        
    </div>
+</transition>
 </template>
 
 <script>
 import SideBar from 'components/sidebar/SidebarMenu';
 import HeadNav from 'components/head-nav/head-nav';
 import NoResult from 'components/no-result/no-result';
+import Loading from 'components/loading/loading';
 import { mapGetters } from 'vuex';
 import { handlerError } from 'api/catch';
 
@@ -100,7 +107,8 @@ export default {
     components: {
         SideBar,
         HeadNav,
-        NoResult
+        NoResult,
+        Loading
     }
 }
 </script>
@@ -114,6 +122,9 @@ export default {
     justify-content: center;
     padding: 30px 0 50px;
 
+}
+.loading-wrap {
+    padding: 100px 0;
 }
 .content-wrap {
     display: flex;

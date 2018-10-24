@@ -55,7 +55,6 @@ export default {
     .side-bar-wrap {
         flex: 0 0 200px;
         width: 200px;
-        height: 100%;
         min-height: 100vh;
         background-color: #001529;
     }

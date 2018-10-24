@@ -1,13 +1,19 @@
 <template>
 <div>
-        <task-item :item="taskItem"></task-item>
+        <div class="task-item-wrap">
+            <task-item :item="taskItem"></task-item>
+        </div>
         <div class="audio-list-wrap">
             <h2><span>全部试音</span></h2>
-            <audio-list :list="list"></audio-list>
-            <div class="no-result-wrap" v-if="list.length == 0">
+            <audio-list :list="list" @changeSatus="changeSatus" :taskFlag="taskFlag"></audio-list>
+            <div class="no-result-wrap" v-if="list.length == 0 && !loading">
                 <no-result title="暂时没有试音文件~~"></no-result>
             </div>
+            <div class="loading-wrap" v-if="loading">
+                <loading></loading>
+            </div>
         </div>
+        
 </div>
 </template>
 
@@ -15,21 +21,22 @@
 import TaskItem from 'components/task-title/task-title'
 import AudioList from 'components/audio-list/audio-list'
 import NoResult from 'components/no-result/no-result'
+import Loading from 'components/loading/loading'
 import { handlerError } from 'api/catch'
 import { CreateArticle } from 'assets/js/article'
 import { formatTime } from 'assets/js/until'
 
 
 export default {
-    mixins: [ handlerError ],
     data() {
         return {
-			loading: false,
+			loading: true,
             finished: false,
             id: 0,
             taskItem: {},
             list: [],
-            uploadSeveId: false
+            uploadSeveId: false,
+            taskFlag: 0
         }
     },
     created() {
@@ -38,27 +45,40 @@ export default {
         this.getDemoList()
     },
     methods: {
-		
-       getTaskDetails() {
-           /*  this.$axios(`/api/demand/${this.id}`).then(res => {
-                this.taskItem = this._normalize(res)
+		changeSatus(index, item, itemIndex) {
+            let status= index ? 'out' : 'in'
+            let demandId = item.demandId;
+            let dubberId = item.dubberId;
+            this.$axios.put(`/api/customer/demand/${demandId}/apply/${dubberId}/${status}`).then(res => {
+                this.list[itemIndex].status = index+1;
             }).catch(err => {
                 handlerError(err.response.data)
-            }) */
+            })
+            //console.log(index, item, "as;lfajks;lf")
+        },
+       getTaskDetails() {
+            this.$axios(`/api/customer/demand/${this.id}`).then(res => {
+                this.taskItem = this._normalize(res.data)
+            }).catch(err => {
+                handlerError(err.response.data)
+            })
         },
         getDemoList() {
-            /* this.$axios(`/api/demand/${this.id}/apply`).then(res => {
-                this.list = res
+            this.loading = true;
+            this.$axios(`/api/customer/demand/${this.id}/apply`).then(res => {
+                this.loading = false;
+                this.list = res.data
+                //需求是否有中标
                 this.list.forEach(item => {
-                    item.self = item.userId === JSON.parse(sessionStorage.user).uid
-                    if(item.self) {
-                        this.uploadSeveId = true;
+                    if(item.status == 1) {
+                        this.taskFlag = 1;
+                        return;
                     }
                 })
-                
             }).catch(err => {
+                this.loading = false;
                 handlerError(err.response.data)
-            }) */
+            })
         },
         
         _normalize(res) {
@@ -71,8 +91,7 @@ export default {
             let demoTitle = res.demoRequirement;
             let demoContent = res.demoContent;
             let joinNum = res.joinNum;
-            let incomeFrom = res.incomeFrom;
-            let incomeTo = res.incomeTo;
+            let income = res.income;
             let publisher = {
                 name: res.publisher,
                 avatar: res.publishAvatar,
@@ -89,15 +108,15 @@ export default {
                 demoContent,
                 joinNum,
                 publisher,
-                incomeFrom,
-                incomeTo
+                income
             })
         }
     },
     components: {
         TaskItem,
 		AudioList,
-        NoResult
+        NoResult,
+        Loading
     }
 }
 </script>
@@ -105,6 +124,9 @@ export default {
 <style lang="scss" scoped>
 @import "~assets/scss/variable";
 @import "~assets/scss/mixin";
+.loading-wrap {
+    padding: 160px 0;
+}
 .btn {
     display: block;
 	width: 100%;
@@ -120,30 +142,16 @@ export default {
 		color: $color-text-l;
 	}
 }  
-.record-wrap {
-    background-color: $color-background-d;
-    padding: 20px 44px 0;
-    text-align: center;
-    border-bottom: 8px solid $color-background;
-
-    h4 {
-        color: $color-text-l;
-        font-size: $font-size-medium-x;
-        padding-bottom: 12px;
-    }
-
-    p {
-        line-height: 1.4;
-        margin-bottom: 40px;
-
-        &:last-of-type {
-            padding-bottom: 16px;
-        }
-    }
+.task-item-wrap {
+    box-shadow: 1px 1px 4px rgba(0,0,0,0.1), -1px -1px 4px rgba(0,0,0,0.1);
+    border-radius: 6px;
+    overflow: hidden;
 }
-
 .audio-list-wrap {
     background-color: $color-background-d;
+    box-shadow: 1px 1px 4px rgba(0,0,0,0.1), -1px -1px 4px rgba(0,0,0,0.1);
+    border-radius: 6px;
+    overflow: hidden;
 
     >h2 {
         height: 44px;
@@ -152,6 +160,7 @@ export default {
         color: $color-text-l;
         padding: 0 16px;
         border: 1px solid $color-background;
+        margin-bottom: 0;
         span {
             display: inline-block;
             height: 100%;

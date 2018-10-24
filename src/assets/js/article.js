@@ -10,8 +10,7 @@ export class Article {
         demoContent,
         joinNum,
         publisher,
-        incomeFrom,
-        incomeTo
+        income
 	}) {
 
 		this.id = id;
@@ -24,8 +23,7 @@ export class Article {
 		this.demoContent = demoContent;
 		this.joinNum = joinNum;
 		this.publisher = publisher;
-		this.incomeFrom = incomeFrom;
-		this.incomeTo = incomeTo;
+		this.income = income;
 	}
 }
 export function CreateArticle({
@@ -39,8 +37,7 @@ export function CreateArticle({
     demoContent,
     joinNum,
     publisher,
-    incomeFrom,
-    incomeTo
+    income
 }) {
 	return new Article({
         id,
@@ -53,7 +50,6 @@ export function CreateArticle({
         demoContent,
         joinNum,
         publisher,
-        incomeFrom,
-        incomeTo
+        income
 	})
 }

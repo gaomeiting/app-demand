@@ -1,4 +1,5 @@
 <template>
+<!-- <div class="side-bar"> -->
     <a-menu theme="dark" mode="inline" :selectedKeys="selectedMenuItem" :defaultOpenKeys="openedSubMenu">
       <a-menu-item key="dashboard">
         <router-link to="/index">
@@ -37,6 +38,7 @@
         </router-link>
       </a-menu-item>
     </a-menu>
+<!--   </div> -->
 </template>
 
 <script>
@@ -73,3 +75,6 @@
     }
   }
 </script>
+<style lang="scss" scoped>
+
+</style>

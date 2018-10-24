@@ -1,38 +1,37 @@
 <template>
     <div class="task-item">
-        <h2>男童音</h2>
+        <h2>{{ item.demoTitle }}</h2>
         <div class="tags-wrap">
             <div class="tags">
-                <span> 男 </span>
-                <span>快速</span>
-                <span v-for="(tag, index) in 3" :key="index">深沉</span>
+                <span v-if="item.gender">{{ item.gender }}</span>
+                <span>{{ item.speed }}</span>
+                <span v-for="(tag, index) in item.tags" :key="index">{{tag}}</span>
             </div>
-            <strong>
-                ¥ 500 ~ ¥ 1000
+            <strong v-if="item.income">
+                ¥ {{ item.income }}
             </strong>
         </div>
         <div class="title">
             <figure class="header">
-                <img src="https://ss1.baidu.com/-4o3dSag_xI4khGko9WTAnF6hhy/image/h%3D300/sign=047b418c923df8dcb93d8991fd1072bf/aec379310a55b3199f70cd0e4ea98226cffc173b.jpg">
+                <img :src="item.publisher && item.publisher.avatar">
             </figure>
             <div class="title-content">
                 <div class="name-wrap">
-                    <h3>会上树的^(*￣(oo)￣)^</h3>
-                    <div class="icon-wrap">
+                    <h3>{{item.publisher && item.publisher.name}}</h3>
+                    <div class="icon-wrap" v-if="item.publisher && !item.publisher.official">
                         <img src="./authority_icon.png">
                     </div>
                 </div>
-                 <time>2017-12-8</time>
+                 <time>{{item.time}}</time>
             </div>
             
             <p class="statu">
-                <!-- <small :class="{'active' : item.status != 1}"></small>
-                <span>{{item.status == 1 ? '进行中' : '结束'}}</span> -->
-                <span> 进行中 </span>
+                <small :class="{'active' : item.status != 1}"></small>
+                <span>{{item.status == 1 ? '进行中' : '结束'}}</span>
             </p>
         </div>
         <p class="text">
-            我是简介我是简介我是简介我是简介我是简介我是简介我是简介我是简介我是简介我是简介我是简介
+            {{ item.demoContent }}
         </p>
     </div>
 </template>
@@ -157,7 +156,7 @@
     > .text {
         line-height: 1.5;
         padding-bottom: 12px;
-        border: 1px solid $color-background;
+        border-top: 1px solid $color-background;
     }
 }
 
