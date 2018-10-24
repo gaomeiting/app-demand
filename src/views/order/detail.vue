@@ -1,15 +1,10 @@
 <template>
   <div class="order_detail">
+    <img src="@/assets/going.png" alt="" style="position: absolute;top: 0;right: 0;">
     <div class="title">
-      <span class="title_title">标题：</span>
-      <span class="title_name">123</span>
-      <p class="dowload">
-        <span style="font-size: 14px;margin-top: 15px">￥</span>
-        678
-      </p>
+      <span class="title_name">标题字数测试标题字数测试标题字数测试标题字数测试标题字数测试标题字数测试标题字数测试标</span>
     </div>
     <div class="ask">
-      <span class="ask_title">要求：</span>
       <div class="ask_list">
         <span class="each_ask" >不限</span>
         <span class="each_ask">voiceStyle</span>
@@ -18,7 +13,6 @@
       </div>
     </div>
     <div class="text">
-      <span class="text_title">文稿：</span>
       <span class="text_text" v-show="!isAllText">text
         <span class="click_all" @click="showAllText">查看全部 >></span>
       </span>
@@ -28,7 +22,7 @@
     </div>
     <p class="demands_title"><span class="color">&nbsp;</span>交付记录</p>
     <div class="demands_list">
-      <a-list itemLayout="horizontal" :dataSource="tryList">
+      <!--<a-list itemLayout="horizontal" :dataSource="tryList">
         <a-list-item slot="renderItem" slot-scope="item, index">
           <div class="list_item">
             <div class="header">
@@ -63,6 +57,48 @@
             </div>
           </div>
         </a-list-item>
+      </a-list>-->
+      <a-list itemLayout="horizontal"
+              rowKey="id"
+              :dataSource="tryList"
+              :grid="{ gutter: 15,column:3 }">
+        <a-list-item slot="renderItem" slot-scope="item, index" class="item_lists">
+          <a-list-item-meta class="item_meta">
+            <p style="font-size: 16px" slot="title">{{item.nickname}}
+              <span style="margin-left: 15px;font-size: 14px;color: #aeaeae;">2018-08-30 12:30:30</span>
+            </p>
+            <div slot="description" class="item_play" style="margin-top: -5px">
+              <!--播放按钮-->
+              <div class="item_play_icons" @click="toPlay(index)" style="width: 200px;height :27px;background: #e7e7e7;border-radius: 8px;line-height: 27px;cursor: pointer;display: flex">
+                <img src="../../assets/go_play.gif"
+                     class="icon_playing"
+                     style="height: 15px;margin-left: 10px; margin-top:5px; display: none" alt="">
+                <img src="../../assets/play_icon.png"
+                     class="icon_pause"
+                     style="height: 15px;margin-left: 10px; margin-top:5px; display: block" alt="">
+              </div>
+              <!--淘汰与中标-->
+              <div style="display: flex;width: 200px;justify-content: space-between;margin-top: 15px">
+                <a-popconfirm
+                  title="确定让该音频中标吗?"
+                  @confirm="confirm()"
+                  okText="确认"
+                  cancelText="取消">
+                  <p style="margin-bottom:0;text-align:center;color:#aeaeae;background:#dcdadb;width: 90px;line-height: 27px;cursor: pointer;border-radius: 4px">淘汰</p>
+                </a-popconfirm>
+                <a-popconfirm
+                  title="确定淘汰该音频吗?"
+                  @confirm="weedOut()"
+                  okText="确定"
+                  cancelText="取消">
+                  <p style="margin-bottom:0;text-align:center;color:#333333;background:#fecf01;width: 90px;line-height: 27px;cursor: pointer;border-radius: 4px">中标</p>
+                </a-popconfirm>
+              </div>
+            </div>
+            <a-avatar slot="avatar" src="@/assets/logo.png" style="width: 40px;
+height: 40px;border-radius: 50%"/>
+          </a-list-item-meta>
+        </a-list-item>
       </a-list>
     </div>
   </div>
@@ -90,11 +126,15 @@
       showShortText(){
         this.isAllText = false
       },
+      toPlay(){},
+      confirm(){},
+      weedOut(){},
     }
   }
 </script>
 <style lang="scss" scoped>
   .order_detail{
+    position: relative;
     background: #ffffff;
     min-height: 85vh;
     margin: 20px;
@@ -105,8 +145,8 @@
       position: relative;
       .dowload{
         position: absolute;
-        right: 0;
-        top: 5px;
+        right: 30px;
+        top: 0px;
         display: flex;
         align-items: center;
         color: #773F1E;
@@ -117,7 +157,7 @@
       }
       .title_name{
         font-size: 22px;
-        color: #222222
+        color: #222222;
       }
     }
     .ask{
@@ -167,92 +207,10 @@
       }
     }
     .demands_list{
-      .list_item{
-        width: 100%;
-        .header{
-          height: 60px;
-          display: flex;
-          .avatar{
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-          }
-          .message{
-            height: 60px;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-around;
-            margin-left: 15px;
-            .mess_title{
-              // margin-top: 10px;
-            }
-            .time{
-              font-size: 12px;
-              color: #aeaeae;
-              margin-bottom: 8px;
-            }
-          }
-        }
-        .middle{
-          width: 100%;
-          display: flex;
-          padding-left: 65px;
-          display: flex;
-          justify-content: space-between;
-          .middle_icons{
-            display: flex;
-            width: 15%;
-            justify-content: space-between;
-            .icon_green{
-              color: #00cb00;
-            }
-            .icon_red{
-              color: red;
-            }
-          }
-        }
-        .content{
+      .item_lists{
+        margin-top: 20px;
+        .item_meta{
 
-          padding: 10px;
-          margin-left: 65px;
-          background: #f2f2f2;
-          position: relative;
-          min-height: 85px;
-          margin-top: 10px;
-          border-radius: 4px;
-          .up_icon{
-            position: absolute;
-            top: -8px;
-            left: 25px;
-            color: #f2f2f2;
-          }
-          .header{
-            height: 50px;
-            display: flex;
-            .avatar{
-              width: 40px;
-              height: 40px;
-            }
-            .message{
-              height: 50px;
-              display: flex;
-              flex-direction: column;
-              justify-content: space-between;
-              margin-left: 15px;
-              .header_mes_title{
-                margin-top: 3px;
-              }
-              .time{
-                font-size: 12px;
-                color: #aeaeae;
-                margin-bottom: 8px;
-              }
-            }
-          }
-          .opinion{
-            margin-left: 55px;
-            margin-top: 5px;
-          }
         }
       }
     }

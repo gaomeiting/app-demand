@@ -30,7 +30,7 @@
           <p>
             <span class="num_sign">￥</span>
             <span class="num_number">454</span>
-            <span class="num_problem">计价规则？</span>
+            <span class="num_problem" @click="showProblem">计价规则？</span>
           </p>
         </div>
       </div>
@@ -100,6 +100,7 @@
           </a-radio-group>
         </div>
       </div>
+      <!--选择风格-->
       <div class="right_style">
         <p class="gender_title"><span class="color">&nbsp;</span>期望风格</p>
         <div class="gender_choose">
@@ -123,6 +124,7 @@
           </a-radio-group>
         </div>
       </div>
+      <!--主播等级-->
       <div class="right_speed">
         <p class="gender_title"><span class="color">*</span>主播等级</p>
         <div class="gender_choose">
@@ -136,6 +138,7 @@
           </a-radio-group>
         </div>
       </div>
+      <!--是否试音-->
       <div class="right_speed">
         <p class="gender_title"><span class="color">&nbsp;</span>是否试音</p>
         <div class="gender_choose">
@@ -149,12 +152,14 @@
           </a-radio-group>
         </div>
       </div>
+      <!--试音要求-->
       <div class="right_speed">
         <p class="gender_title"><span class="color">*</span>试音要求</p>
         <div class="gender_choose">
           <a-input placeholder="简单描述您的配音要求，少于50字"/>
         </div>
       </div>
+      <!--试音文稿-->
       <div class="right_text">
         <p class="gender_title"><span class="color">*</span>试音文稿</p>
         <div class="gender_choose">
@@ -166,10 +171,11 @@
             :autosize="{ minRows: 5, maxRows: 5}" />
         </div>
       </div>
+      <!--试音期限-->
       <div class="right_speed" style="margin-top: 30px">
         <p class="gender_title"><span class="color">*</span>试音期限</p>
         <div class="gender_choose">
-          <a-select placeholder="请选择试音期限" style="width: 100%" @change="changeUseful">
+          <a-select placeholder="请选择试音期限" style="width: 100%" @change="changeTime">
             <a-select-option :value=1>2小时</a-select-option>
             <a-select-option :value=2>4小时</a-select-option>
             <a-select-option :value=3>10小时</a-select-option>
@@ -179,6 +185,17 @@
       </div>
       <p class="right_publish">发布</p>
     </div>
+    <a-modal title="快捷配音计费方式" v-model="visible" @ok="handleOk" cancelText="关闭" okText="确定">
+      <p>主播基本价格：</p>
+      <p>顶级主播：10元/100字<br/>
+        知名主播：5元/100字<br/>
+        优质主播：2元/100字</p>
+      <p>男、女声、风格特点等都不影响计费。</p>
+      <p>其他计费计算规则：</p>
+      <p>500字起录，不足500字按照500字计算。
+        字数计算按照直接入1位的方式计算有多少百字，即523字按照600字计算。
+        需要加急配音价格为基础价格的2倍。</p>
+    </a-modal>
   </div>
 </template>
 
@@ -206,16 +223,23 @@
         deliveryTime:'',
         level:'',
         tryText:'',
-        changeUseful:null
-
+        changeUseful:null,
+        visible:false,
       }
     },
     methods:{
+      showProblem(){
+        this.visible = true
+      },
+      handleOk(){
+        this.visible = false
+      },
       onChangeTitle(){},
       chooseDeliveryTime(date, dateString){},
       styleChange(){
 
       },
+      changeTime(){}
     }
   }
 </script>
@@ -303,6 +327,9 @@
           .num_problem{
             margin-left: 5px;
             color: #773F1E;
+            &:hover{
+              cursor: pointer;
+            }
           }
         }
       }
