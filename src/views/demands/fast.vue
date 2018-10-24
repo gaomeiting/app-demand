@@ -185,11 +185,17 @@
       </div>
       <p class="right_publish">发布</p>
     </div>
-    <!--<a-modal title="Basic Modal" @ok="handleOk">
-      <p>Some contents...</p>
-      <p>Some contents...</p>
-      <p>Some contents...</p>
-    </a-modal>-->
+    <a-modal title="快捷配音计费方式" v-model="visible" @ok="handleOk" cancelText="关闭" okText="确定">
+      <p>主播基本价格：</p>
+      <p>顶级主播：10元/100字<br/>
+        知名主播：5元/100字<br/>
+        优质主播：2元/100字</p>
+      <p>男、女声、风格特点等都不影响计费。</p>
+      <p>其他计费计算规则：</p>
+      <p>500字起录，不足500字按照500字计算。
+        字数计算按照直接入1位的方式计算有多少百字，即523字按照600字计算。
+        需要加急配音价格为基础价格的2倍。</p>
+    </a-modal>
   </div>
 </template>
 
@@ -219,7 +225,6 @@
         tryText:'',
         changeUseful:null,
         visible:false,
-
       }
     },
     methods:{
