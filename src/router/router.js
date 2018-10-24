@@ -2,7 +2,7 @@
  * @Author: Cicy 
  * @Date: 2018-10-23 09:51:21 
  * @Last Modified by: Cicy.gao
- * @Last Modified time: 2018-10-23 18:23:40
+ * @Last Modified time: 2018-10-24 15:14:12
  */
 import axios from "axios";
 import Vue from "vue";
@@ -19,24 +19,24 @@ const routes = [
     {
       path: "/regist",
       name: "regist",
-      meta: {breadcrumbName: '注册', icon: 'regist'},
+      meta: {breadcrumbName: '注册', icon: 'regist', requireAuth: true},
       component: () => import("@/views/regist/regist")
     },
    /* 注册逻辑end */
   /* 工作台模块start */
   {
     path: "/index",
-    meta: {breadcrumbName: '工作台', icon: 'dashboard'},
+    meta: {breadcrumbName: '工作台', icon: 'dashboard', requireAuth: true},
     component: () => import("@/views/dashboard/dashboard"),
     children: [{
       path: '',
       name: 'task',
-      meta: {breadcrumbName: '需求列表', icon: 'task'},
+      meta: {breadcrumbName: '需求列表', icon: 'task', requireAuth: true},
       component: () => import("@/views/task/task"),
     }, {
       path: ':id',
       name: 'taskDetails',
-      meta: {breadcrumbName: '需求详情', icon: 'taskDetails'},
+      meta: {breadcrumbName: '需求详情', icon: 'taskDetails', requireAuth: true},
       component: () => import("@/views/taskDetails/taskDetails"),
     }]
   },
@@ -44,7 +44,7 @@ const routes = [
   {
     path: '/wallet',
     name: 'wallet',
-    meta: {breadcrumbName: '资金管理', icon: 'wallet'},
+    meta: {breadcrumbName: '资金管理', icon: 'wallet', requireAuth: true},
     component: () => import("@/views/wallet/index"),
   },
     {
