@@ -2,7 +2,7 @@
  * @Author: Cicy
  * @Date: 2018-10-23 09:51:21
  * @Last Modified by: Cicy.gao
- * @Last Modified time: 2018-10-24 15:14:12
+ * @Last Modified time: 2018-10-25 14:00:33
  */
 import axios from "axios";
 import Vue from "vue";
@@ -127,7 +127,6 @@ if (to.matched.some(r => r.meta.requireAuth)) {
     }
     else {
       axios('/api/user/userinfo').then(res => {
-        //window.alert(res.uid)
         store.commit('SET_LOGIN', res.data);
         next();
       }).catch(err => {

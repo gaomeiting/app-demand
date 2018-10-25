@@ -47,8 +47,8 @@ export default {
           this.list = res.data;
 				}	
 			}).catch(err => {
-				this.loading = false
-				this.handlerError(err.response.data)
+        this.loading = false
+				handlerError(err.response.data)
 			})
 		},
 		

@@ -73,7 +73,6 @@ export default {
       ...mapGetters(['user'])  
     },
     created() {
-        console.log(this.$route.fullPath)
         this.$axios('/api/notification/count').then(res => {
             this.count = res.data;
         }).catch(err => {
@@ -85,7 +84,7 @@ export default {
             if(key != 3) return;
             this.$axios.post('/api/user/signout').then(res => {
                 this.setLoginOut()
-                let url = `${BASE_URL}?showBox=1`;
+                let url = `${BASE_URL}/#/home?showBox=1`;
                 window.location.href= url;
             }).catch(err => {
                 handlerError(err.response.data)
