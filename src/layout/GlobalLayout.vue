@@ -15,15 +15,15 @@
         <span style="color: #000;font-size: 16px">{{this.$route.meta.breadcrumbName}}</span>
         <div class="header-navbar">
           <a @click="toMesList">
-            <a-badge :count="messageTotal" class="header-navbar-item-icon"  >
+            <a-badge :count="messageTotal" class="header-navbar-item-icon">
               <a-icon type="bell"/>
             </a-badge>
           </a>
 
           <a-dropdown class="header-navbar-item">
             <span>
-              <!--<a-avatar class="avatar" size="small" shape="circle" :src="user.avatar" style="vertical-align: middle; margin-right: 0.5em;" />-->
-              <!--<span>{{user.nickname}}</span>-->
+              <a-avatar class="avatar" size="small" shape="circle" :src="user.avatar" style="vertical-align: middle; margin-right: 0.5em;" />
+              <span>{{user.nickname}}</span>
             </span>
             <a-menu style="width: 150px" slot="overlay">
               <a-menu-item key="1">

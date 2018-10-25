@@ -194,8 +194,8 @@
       </div>
       <a-modal title="快捷配音计费方式" v-model="visible" @ok="handleOk" cancelText="关闭" okText="确定">
         <p>主播基本价格：</p>
-        <p>顶级主播：10元/100字<br/>
-          知名主播：5元/100字<br/>
+        <p>知名主播：10元/100字<br/>
+          专业主播：5元/100字<br/>
           优质主播：2元/100字</p>
         <p>男、女声、风格特点等都不影响计费。</p>
         <p>其他计费计算规则：</p>
@@ -277,7 +277,7 @@
       chooseIdentity(){
         console.log(this.identity)
         if(this.identity == 2){
-          axios.get('api/customer/company').then(res => {
+          axios.get('/api/customer/company').then(res => {
             if(res.data != ''){
               this.company = res.data
             }
