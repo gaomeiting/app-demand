@@ -2,7 +2,7 @@
  * @Author: Cicy
  * @Date: 2018-10-23 09:51:21
  * @Last Modified by: Cicy.gao
- * @Last Modified time: 2018-10-25 14:00:33
+ * @Last Modified time: 2018-10-25 16:39:52
  */
 import axios from "axios";
 import Vue from "vue";
@@ -19,7 +19,7 @@ const routes = [
     {
       path: "/regist",
       name: "regist",
-      meta: {breadcrumbName: '注册', icon: 'regist', requireAuth: true},
+      meta: {breadcrumbName: '注册', icon: 'regist'},
       component: () => import("@/views/regist/regist")
     },
    /* 注册逻辑end */
