@@ -33,11 +33,11 @@
           <span v-if="status == 2">修改中</span>
           <span v-if="status == 8">已取消</span>
         </div>
-        <span slot="click"
-              slot-scope="click"
-              style="background: #ffe799;padding: 5px 15px;border-radius: 4px;font-size: 12px;cursor: pointer">
-          下载
-        </span>
+        <div slot="click"
+              slot-scope="click, record">
+          <span class="click_download" v-if="record.voiceStatus == 1" @click="downloadUrl(record.id)">下载</span>
+          <span class="click_no_download" v-if="record.voiceStatus == 0">下载</span>
+        </div>
       </a-table>
     </div>
   </div>
@@ -78,6 +78,22 @@
     methods: {
       handleTableChange(pagination, filters, sorter) {
 
+      },
+      downloadUrl(id){
+        axios.get('/api/customer/order/'+id+'/voice').then(res => {
+          if(res.data == ''){
+            this.$message.warning('当前订单还没有上传音频');
+          }else{
+            window.open(res.data)
+          }
+        }).catch(err => {
+          const errorStatus = err.response.status
+          if(errorStatus == '500'){
+            this.error = 1
+          }else{
+            handlerError(err.response.data)
+          }
+        })
       },
       beforeUpload(file){
         console.log(file)
@@ -184,6 +200,21 @@
         cursor: pointer;
         color: #ffd101;
       }
+    }
+    .click_download{
+      background: #ffe799;
+      padding: 5px 15px;
+      border-radius: 4px;
+      font-size: 12px;
+      &:hover{
+        cursor: pointer
+      }
+    }
+    .click_no_download{
+      background: #e4e5e5;
+      padding: 5px 15px;
+      border-radius: 4px;
+      font-size: 12px;
     }
   }
 </style>
