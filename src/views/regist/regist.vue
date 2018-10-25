@@ -2,7 +2,7 @@
  * @Author: Cicy 
  * @Date: 2018-10-23 10:40:24 
  * @Last Modified by: Cicy.gao
- * @Last Modified time: 2018-10-24 16:03:58
+ * @Last Modified time: 2018-10-25 18:29:32
  */
 <template>
     <div class="page">
@@ -32,7 +32,7 @@
             <p>
                 <label><strong>·</strong>验证</label>
                 <input type="text" placeholder="请输入验证码" v-model="form.code" @input="checkRules(4)">
-                <a href="javascrip:;" class="btn" :class="{'active' : tip === '获取验证码'}" @click.stop="getCode">{{tip}}</a>
+                <a href="javascript:void(0)" class="btn" :class="{'active' : tip === '获取验证码'}" @click.stop="getCode">{{tip}}</a>
                 
             </p>
             <transition name="fadePage" mode="out-in">
@@ -52,7 +52,7 @@
             <transition name="fadePage" mode="out-in">
                 <p v-if="error[2]" class="error"> {{error[2].msg}} </p>
             </transition>
-            <a href="javascrip:;" class="btn" :class="{'active': submitBtnActive}" @click="submit">确认</a>
+            <a href="javascript:void(0)" class="btn" :class="{'active': submitBtnActive}" @click="submit">确认</a>
         </div>
         
     </div>
@@ -61,6 +61,7 @@
 <script>
 import { handlerError } from 'api/catch';
 import { mapGetters, mapMutations } from 'vuex';
+import { BASE_URL } from 'api/config';
 export default {
   data(){
     return{
@@ -75,7 +76,8 @@ export default {
         timer: null,
         tip: '获取验证码',
         flag: true,
-        redirect: ''
+        redirect: '',
+        userId: 0
     }
   },
   computed: {
@@ -85,7 +87,8 @@ export default {
       ...mapGetters(['user'])
   },
   created() {
-      this.redirect = this.$router.params.redirect || ''
+      this.redirect = this.$route.params.redirect || '/'
+      this.userId = this.$route.query.userId;
   },
 methods: {
   submit() {
@@ -96,16 +99,26 @@ methods: {
                    email: this.form.email,
                    qq: this.form.qq,
                    mobile: this.form.mobile,
-                   vcode: this.form.code
+                   vcode: this.form.code,
+                   userId: this.userId
             }).then(res => {
                //页面跳转
-               this.setLogin(res.data)
-               if(this.redirect) {
+               /* this.setLogin(res.data) */
+                this.$success({
+                    title: '完善用户信息成功，请扫码登录',
+                    onOk() {
+                        let url = `${BASE_URL}/#/home?showBox=1`;
+                        window.location.href= url;
+                    }
+                });
+                
+               
+               /* if(this.redirect) {
                    this.$router.push(this.redirect);
                }
                else {
                    this.$router.push('/')
-               }
+               } */
            }).catch(err => {
                handlerError(err.response.data)
            })
