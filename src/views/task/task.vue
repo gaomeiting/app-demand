@@ -8,7 +8,7 @@
   <loading></loading>
 </div>
 <figure @click="goDemand" class="placeholder">
-  <img src="/publicImages/banner.jpg">
+  <img src="/customer/publicImages/banner.jpg">
 </figure>
 </div>
 </template>

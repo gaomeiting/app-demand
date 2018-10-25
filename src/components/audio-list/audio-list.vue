@@ -10,7 +10,7 @@
                         <div class="name-wrap">
                             <h3>{{item.nickname}}</h3>
                             <div class="icon-wrap">
-                                <img :src="'/publicImages/anchor_'+item.dubberLevel+'.png'">
+                                <img :src="'/customer/publicImages/anchor_'+item.dubberLevel+'.png'">
                             </div>
                         </div>
                          <time>{{ item.creatTime }}</time>
@@ -25,8 +25,8 @@
                         <span> {{ index != currentSongIndex || !diff || (song && index === currentSongIndex && flag) ? format(item.voiceMeta.duration) : currentTime }} </span>
                     </div>
                 </div>
-                <img v-if="item.status == 1" src="/publicImages/selected.png" alt="">
-                <img v-if="item.status == 2" src="/publicImages/unselected.png" alt="">
+                <img v-if="item.status == 1" src="/customer/publicImages/selected.png" alt="">
+                <img v-if="item.status == 2" src="/customer/publicImages/unselected.png" alt="">
                 <div class="btn-wrap" v-if="item.status == 0">
                     <a href="javascript:;" class="btn" v-for="(btn,btnIndex) in btns" :class="{ 'active': btnIndex=== 0 }" v-if=" btnIndex || !btnIndex && !taskFlag" @click.top="showConfirm(btnIndex, item, index)">{{btn.text}}</a>
                 </div>
@@ -221,13 +221,13 @@ li {
                 background-position: center center;
                 background-repeat: no-repeat;
                 &.icon_pause {
-                    background-image: url('/publicImages/pause.gif');
+                    background-image: url('/customer/publicImages/pause.gif');
                 }
                 &.icon_play {
-                    background-image: url('/publicImages/play.png');
+                    background-image: url('/customer/publicImages/play.png');
                 }
                 &.icon_loading {
-                    background-image: url('/publicImages/loading.gif');
+                    background-image: url('/customer/publicImages/loading.gif');
                     flex: 0 0 16px;
                     width: 16px;
                     height: 16px;

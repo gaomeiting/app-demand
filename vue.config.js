@@ -2,7 +2,7 @@ const path = require('path')
 const resolve = dir => {return path.join(__dirname, dir)}
 
 module.exports = {
-  //baseUrl: './',
+  baseUrl: '/customer',
   chainWebpack: config => {
     config.resolve.alias
       .set('@', resolve('src'))
