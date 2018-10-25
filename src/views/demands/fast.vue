@@ -22,14 +22,15 @@
             class="title_textarea"
             v-model="content"
             placeholder="请输入正文"
+            @blur="loseFocus"
             style="border: none; margin-top: 20px; font-size: 14px;"
             :autosize="{ minRows: 15, maxRows: 15 }" />
-          <span class="test_number">5500</span>
+          <span class="test_number">{{content.length}}</span>
         </div>
         <div class="header_num">
           <p>
             <span class="num_sign">￥</span>
-            <span class="num_number">454</span>
+            <span class="num_number">{{demandPrice}}</span>
             <span class="num_problem" @click="showProblem">计价规则？</span>
           </p>
         </div>
@@ -105,14 +106,13 @@
       <div class="right_style">
         <p class="gender_title"><span class="color">*</span>期望风格</p>
         <div class="gender_choose">
-          <a-radio-group class="identity_radio"
+          <a-radio-group class="gender_radio"
                          name="radioGroup"
                          v-model="style"
-                         @change="styleChange"
                          size="small">
             <a-radio value="新闻播报">新闻播报</a-radio>
-            <a-radio value='大气稳重'>大气稳重</a-radio>
-            <a-radio value='家常聊天'>家常聊天</a-radio>
+            <a-radio value="大气稳重">大气稳重</a-radio>
+            <a-radio value="家常聊天">家常聊天</a-radio>
             <a-radio value='激昂气势'>激昂气势</a-radio>
             <a-radio value='悠扬抒情'>悠扬抒情</a-radio>
             <a-radio value='动感活力'>动感活力</a-radio>
@@ -132,6 +132,7 @@
           <a-radio-group class="gender_radio"
                          name="radioGroup"
                          v-model="level"
+                         @change="chooseLevel"
                          size="small">
             <a-radio :value=0>优质主播</a-radio>
             <a-radio :value=1>专业主播</a-radio>
@@ -157,7 +158,7 @@
       <div class="right_speed">
         <p class="gender_title"><span class="color">*</span>试音要求</p>
         <div class="gender_choose">
-          <a-input placeholder="简单描述您的配音要求，少于50字"/>
+          <a-input v-model="demoRequirement" placeholder="简单描述您的配音要求，少于50字" maxlength="50"/>
         </div>
       </div>
       <!--试音文稿-->
@@ -169,6 +170,7 @@
             v-model="tryText"
             placeholder="请输入正文"
             style="font-size: 14px"
+            maxlength="150"
             :autosize="{ minRows: 5, maxRows: 5}" />
         </div>
       </div>
@@ -216,17 +218,19 @@
       return {
         styleOption,
         styleDesable:[],
+        demandPrice:0,
         title:'',
         content:'',
         identity:null,
         gender:null,
         speed:null,
+        level:null,
         style:[],
         tryAudio:0,
         company:'',
         deliveryTime:'',
         bidTime:'',
-        level:'',
+        demoRequirement:'',
         requirementTitle:1,
         tryText:'',
         changeUseful:null,
@@ -239,6 +243,25 @@
       },
       handleOk(){
         this.visible = false
+      },
+      //配音正文输入完毕
+      loseFocus(){
+        this.tryText = this.content.substring(0,150)
+        if(this.content.length > 0){
+          if(this.level == null){
+            this.level = 0
+          }
+          axios.get('api/customer/demand/price?dubberLevel='+this.level+'&wordCount=' + this.content.length).then(res => {
+            this.demandPrice = res.data
+          }).catch(err => {
+            const errorStatus = err.response.status
+            if(errorStatus == '500'){
+              this.error = 1
+            }else{
+              handlerError(err.response.data)
+            }
+          })
+        }
       },
       //选择身份
       chooseIdentity(){
@@ -270,20 +293,32 @@
       chooseDeliveryTime(date, dateString){
         this.deliveryTime = dateString + ' 00:00:00'
       },
+      chooseLevel(value){
+        console.log(value.target.value)
+        if(this.content.length > 0){
+          axios.get('api/customer/demand/price?dubberLevel='+value.target.value+'&wordCount=' + this.content.length).then(res => {
+            this.demandPrice = res.data
+          }).catch(err => {
+            const errorStatus = err.response.status
+            if(errorStatus == '500'){
+              this.error = 1
+            }else{
+              handlerError(err.response.data)
+            }
+          })
+        }
+      },
       ChangeTime(value){
         const myDate = value*3600000
         const currTime = new Date().getTime();
         const time = new Date( myDate+currTime )
         this.bidTime = time.toLocaleString()
       },
-      styleChange(value){
+      addDemand(){
         const arr = []
-        arr.push(value.target.value)
+        arr.push(this.style)
         this.style = arr
         console.log(this.style)
-      },
-
-      addDemand(){
         const data = {
           'title' : this.title,
           'content' : this.content,
@@ -292,29 +327,58 @@
           'requiredGender' : this.gender,
           'dubberLevel' : this.level,
           'requiredDemo' : 1,
-          'demoRequirement' : this.title,
+          'demoRequirement' : this.demoRequirement,
           'deliveryTime' : this.deliveryTime,
           'bidTime' : this.bidTime,
           'demoContent' : this.tryText,
           'requirementTitle' : this.requirementTitle,
-          'income' : 1230,
+          'income' : this.demandPrice,
           'type' : this.identity,
           'publishScope' : 0,
+          'companyName' : this.company,
         }
-        console.log(data)
-        axios.post('api/customer/demand',data).then(res => {
-          this.$router.push({
-            name: 'demands_success',
+        if(this.title == ''){
+          this.$message.error('请输入标题')
+        }else if(this.content == ''){
+          this.$message.error('请输入正文')
+        }else if(this.identity == null){
+          this.$message.error('请选择您的身份')
+        }else if(this.identity == 2 && this.company == ''){
+          this.$message.error('请输入公司名称')
+        }else if(this.deliveryTime == ''){
+          this.$message.error('请选择交付时间')
+        }else if(this.gender == null){
+          this.$message.error('请选择性别要求')
+        }else if(this.speed == null){
+          this.$message.error('请选择期望语速')
+        }else if(this.style == ''){
+          this.$message.error('请选择期望风格')
+        }else if(this.level == null){
+          this.$message.error('请选择主播等级')
+        }else if(this.demoRequirement == ''){
+          this.$message.error('请输入试音要求')
+        }else if(this.tryText == ''){
+          this.$message.error('请输入试音文稿')
+        }else if(this.bidTime == ''){
+          this.$message.error('请选择试音期限')
+        }else{
+          axios.post('/api/customer/demand',data).then(res => {
+            this.$router.push({
+              name: 'demands_success',
+              params:{
+                title:this.title,
+
+              }
+            })
+          }).catch(err => {
+            const errorStatus = err.response.status
+            if(errorStatus == '500'){
+              this.error = 1
+            }else{
+              handlerError(err.response.data)
+            }
           })
-        }).catch(err => {
-          const errorStatus = err.response.status
-          if(errorStatus == '500'){
-            this.error = 1
-          }else{
-            handlerError(err.response.data)
-          }
-        })
-        /**/
+        }
       },
     }
   }

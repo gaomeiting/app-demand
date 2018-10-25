@@ -8,7 +8,7 @@
                :pagination="pagination">
         <span slot="id"
               slot-scope="id"
-              style="cursor: pointer"
+              class="click_id"
               @click="showOrderDetail(id)">
           {{id}}
         </span>
@@ -102,7 +102,7 @@
       },
       toFastDetail(id){
         console.log(id)
-        axios.get('api/order/'+id+'/detail').then(res => {
+        axios.get('/api/order/'+id+'/detail').then(res => {
           this.$router.push({
             name: 'order_fast_detail',
             params: {
@@ -130,7 +130,7 @@
       },
     },
     mounted(){
-      axios.get('api/customer/order').then(res => {
+      axios.get('/api/customer/order').then(res => {
         this.orderList = res.data.data
         console.log(res.data)
       }).catch(err => {
@@ -178,6 +178,12 @@
       padding: 4px 8px;
       text-align: center;
       margin-bottom: 0px;
+    }
+    .click_id{
+      &:hover{
+        cursor: pointer;
+        color: #ffd101;
+      }
     }
   }
 </style>

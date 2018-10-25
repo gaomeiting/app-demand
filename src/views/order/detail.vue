@@ -141,7 +141,7 @@
         if(this.opinion == ''){
           this.$message.error('请输入意见');
         }else{
-          axios.post('api/customer/order/'+id+'/voice',data).then(res => {
+          axios.post('/api/customer/order/'+id+'/voice',data).then(res => {
             this.$message.error('订单不满意，请联系配音员');
             this.visibleNo = false
             this.reload()
@@ -159,7 +159,7 @@
     },
     mounted(){
       console.log(this.$route.params.id)
-      axios.get('api/customer/order/'+this.$route.params.id+'/detail').then(res => {
+      axios.get('/api/customer/order/'+this.$route.params.id+'/detail').then(res => {
         this.orderMess = res.data
         this.voiceStyle = this.orderMess.voiceStyle.toString()
         let text = this.orderMess.content
@@ -186,7 +186,7 @@
           this.error = 1
         }
       })
-      axios.get('api/order/'+this.$route.params.id+'/delivery').then(res => {
+      axios.get('/api/order/'+this.$route.params.id+'/delivery').then(res => {
         this.deliveryList = res.data
         console.log(this.deliveryList)
       }).catch(err => {

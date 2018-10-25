@@ -76,13 +76,13 @@ const routes = [
             {
               path: '/demands/fast',
               name: 'demands_fast',
-              meta: {breadcrumbName: '快捷需求', requireAuth: true},
+              meta: {breadcrumbName: '发布快捷需求', requireAuth: true},
               component: () => import('@/views/demands/fast.vue')
             },
             {
               path: '/demands/project',
               name: 'demands_project',
-              meta: {breadcrumbName: '项目需求', requireAuth: true},
+              meta: {breadcrumbName: '发布项目需求', requireAuth: true},
               component: () => import('@/views/demands/project.vue')
             },
             {
