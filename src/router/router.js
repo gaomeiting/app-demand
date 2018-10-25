@@ -30,7 +30,7 @@ const routes = [
     component: () => import("@/views/dashboard/dashboard"),
     children: [{
       path: '',
-      name: 'task',
+      name: 'dashboard',
       meta: {breadcrumbName: '需求列表', icon: 'task', requireAuth: true},
       component: () => import("@/views/task/task"),
     }, {
@@ -86,7 +86,7 @@ const routes = [
               component: () => import('@/views/demands/project.vue')
             },
             {
-              path: '/demands/project',
+              path: '/demands/success',
               name: 'demands_success',
               meta: {breadcrumbName: '订单支付', requireAuth: true},
               component: () => import('@/views/demands/success.vue')

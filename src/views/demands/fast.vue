@@ -1,211 +1,217 @@
 <template>
-  <div class="fast_demand">
-    <div class="add_left">
-      <div class="left_header">
-        <div class="header_title">
-          <span class="title_sign"> </span>
-          <span class="title_title">配音内容</span>
+  <div>
+    <Exception v-if="error == 1"></Exception>
+    <div class="fast_demand" v-if="error == 0">
+      <div class="add_left">
+        <div class="left_header">
+          <div class="header_title">
+            <span class="title_sign"> </span>
+            <span class="title_title">配音内容</span>
+          </div>
+          <div class="header_content">
+            <div class="content_title">
+              <a-input
+                v-model="title"
+                maxlength="50"
+                class="title_input"
+                placeholder="请输入标题"/>
+              <div class="read_title">
+                <a-switch defaultChecked @change='onChangeTitle' size="small"/>
+                <p class="title">需读标题</p>
+              </div>
+            </div>
+            <a-textarea
+              class="title_textarea"
+              v-model="content"
+              placeholder="请输入正文"
+              @blur="loseFocus"
+              style="border: none; margin-top: 20px; font-size: 14px;"
+              :autosize="{ minRows: 15, maxRows: 15 }" />
+            <span class="test_number">{{content.length}}</span>
+          </div>
+          <div class="header_num">
+            <p>
+              <span class="num_sign">￥</span>
+              <span class="num_number">{{demandPrice}}</span>
+              <span class="num_problem" @click="showProblem">计价规则？</span>
+            </p>
+          </div>
         </div>
-        <div class="header_content">
-          <div class="content_title">
-            <a-input
-              v-model="title"
-              maxlength="50"
-              class="title_input"
-              placeholder="请输入标题"/>
-            <div class="read_title">
-              <a-switch defaultChecked @change='onChangeTitle' size="small"/>
-              <p class="title">需读标题</p>
+        <div class="left_footer">
+          <div class="footer_title">
+            <span class="title_sign"> </span>
+            <span class="title_title">配音要求</span>
+          </div>
+          <!--选择身份-->
+          <div class="footer_identity">
+            <p class="identity_title"><span class="color">*</span>您的身份</p>
+            <div class="identity_choose">
+              <a-radio-group class="identity_radio"
+                             name="radioGroup"
+                             v-model="identity"
+                             @change="chooseIdentity"
+                             size="small">
+                <a-radio :value=1>个人</a-radio>
+                <a-radio :value=2>公司</a-radio>
+              </a-radio-group>
+              <a-input
+                v-if="identity == 2"
+                class="identity_innput title_input"
+                v-model="company"
+                maxlength="50"
+                style="font-size: 14px;width: 55%;"
+                placeholder="请输入公司名称"/>
             </div>
           </div>
-          <a-textarea
-            class="title_textarea"
-            v-model="content"
-            placeholder="请输入正文"
-            @blur="loseFocus"
-            style="border: none; margin-top: 20px; font-size: 14px;"
-            :autosize="{ minRows: 15, maxRows: 15 }" />
-          <span class="test_number">{{content.length}}</span>
-        </div>
-        <div class="header_num">
-          <p>
-            <span class="num_sign">￥</span>
-            <span class="num_number">{{demandPrice}}</span>
-            <span class="num_problem" @click="showProblem">计价规则？</span>
-          </p>
+          <!--选择交付时间-->
+          <div class="footer_identity">
+            <p class="identity_title"><span class="color">*</span>交付时间</p>
+            <div class="identity_choose">
+              <a-date-picker @change="chooseDeliveryTime" placeholder="请选择交付时间"/>
+            </div>
+          </div>
         </div>
       </div>
-      <div class="left_footer">
-        <div class="footer_title">
+      <div class="add_right">
+        <div class="right_title">
           <span class="title_sign"> </span>
           <span class="title_title">配音要求</span>
         </div>
-        <!--选择身份-->
-        <div class="footer_identity">
-          <p class="identity_title"><span class="color">*</span>您的身份</p>
-          <div class="identity_choose">
-            <a-radio-group class="identity_radio"
+        <!--选择性别-->
+        <div class="right_gender">
+          <p class="gender_title"><span class="color">*</span>性别要求</p>
+          <div class="gender_choose">
+            <a-radio-group class="gender_radio"
                            name="radioGroup"
-                           v-model="identity"
-                           @change="chooseIdentity"
+                           v-model="gender"
                            size="small">
-              <a-radio :value=1>个人</a-radio>
-              <a-radio :value=2>公司</a-radio>
+              <a-radio :value=1>男</a-radio>
+              <a-radio :value=2>女</a-radio>
             </a-radio-group>
-            <a-input
-              v-if="identity == 2"
-              class="identity_innput title_input"
-              v-model="company"
-              maxlength="50"
-              style="font-size: 14px;width: 55%;"
-              placeholder="请输入公司名称"/>
           </div>
         </div>
-        <!--选择交付时间-->
-        <div class="footer_identity">
-          <p class="identity_title"><span class="color">*</span>交付时间</p>
-          <div class="identity_choose">
-            <a-date-picker @change="chooseDeliveryTime" placeholder="请选择交付时间"/>
+        <!--选择语速-->
+        <div class="right_speed">
+          <p class="gender_title"><span class="color">*</span>期望语速</p>
+          <div class="gender_choose">
+            <a-radio-group class="gender_radio"
+                           name="radioGroup"
+                           v-model="speed"
+                           size="small">
+              <a-radio :value=0>慢速</a-radio>
+              <a-radio :value=1>标准</a-radio>
+              <a-radio :value=2>快速</a-radio>
+            </a-radio-group>
           </div>
         </div>
+        <!--选择风格-->
+        <div class="right_style">
+          <p class="gender_title"><span class="color">*</span>期望风格</p>
+          <div class="gender_choose">
+            <a-radio-group class="gender_radio"
+                           name="radioGroup"
+                           v-model="style"
+                           size="small">
+              <a-radio value="新闻播报">新闻播报</a-radio>
+              <a-radio value="大气稳重">大气稳重</a-radio>
+              <a-radio value="家常聊天">家常聊天</a-radio>
+              <a-radio value='激昂气势'>激昂气势</a-radio>
+              <a-radio value='悠扬抒情'>悠扬抒情</a-radio>
+              <a-radio value='动感活力'>动感活力</a-radio>
+              <a-radio value='庄重威严'>庄重威严</a-radio>
+              <a-radio value='冷淡感性'>冷淡感性</a-radio>
+              <a-radio value='走心煽情'>走心煽情</a-radio>
+              <a-radio value='浑厚沧桑'>浑厚沧桑</a-radio>
+              <a-radio value='甜美可爱'>甜美可爱</a-radio>
+              <a-radio value='纯真童声'>纯真童声</a-radio>
+            </a-radio-group>
+          </div>
+        </div>
+        <!--主播等级-->
+        <div class="right_speed">
+          <p class="gender_title"><span class="color">*</span>主播等级</p>
+          <div class="gender_choose">
+            <a-radio-group class="gender_radio"
+                           name="radioGroup"
+                           v-model="level"
+                           @change="chooseLevel"
+                           size="small">
+              <a-radio :value=0>优质主播</a-radio>
+              <a-radio :value=1>专业主播</a-radio>
+              <a-radio :value=2>知名主播</a-radio>
+            </a-radio-group>
+          </div>
+        </div>
+        <!--是否试音-->
+        <div class="right_speed">
+          <p class="gender_title"><span class="color">&nbsp;</span>是否试音</p>
+          <div class="gender_choose">
+            <a-radio-group class="gender_radio"
+                           name="radioGroup"
+                           v-model="tryAudio"
+                           :defaultValue="tryAudio"
+                           disabled
+                           size="small">
+              <a-radio :value=0>试音</a-radio>
+            </a-radio-group>
+          </div>
+        </div>
+        <!--试音要求-->
+        <div class="right_speed">
+          <p class="gender_title"><span class="color">*</span>试音要求</p>
+          <div class="gender_choose">
+            <a-input v-model="demoRequirement" placeholder="简单描述您的配音要求，少于50字" maxlength="50"/>
+          </div>
+        </div>
+        <!--试音文稿-->
+        <div class="right_text">
+          <p class="gender_title"><span class="color">*</span>试音文稿</p>
+          <div class="gender_choose">
+            <a-textarea
+              class="text_textarea"
+              v-model="tryText"
+              placeholder="请输入正文"
+              style="font-size: 14px"
+              maxlength="150"
+              :autosize="{ minRows: 5, maxRows: 5}" />
+          </div>
+        </div>
+        <!--试音期限-->
+        <div class="right_speed" style="margin-top: 30px">
+          <p class="gender_title"><span class="color">*</span>试音期限</p>
+          <div class="gender_choose">
+            <a-select placeholder="请选择试音期限"
+                      @change="ChangeTime"
+                      style="width: 100%">
+              <a-select-option :value=2>2小时</a-select-option>
+              <a-select-option :value=4>4小时</a-select-option>
+              <a-select-option :value=10>10小时</a-select-option>
+              <a-select-option :value=24>24小时</a-select-option>
+            </a-select>
+          </div>
+        </div>
+        <p class="right_publish" @click="addDemand">发布</p>
       </div>
+      <a-modal title="快捷配音计费方式" v-model="visible" @ok="handleOk" cancelText="关闭" okText="确定">
+        <p>主播基本价格：</p>
+        <p>顶级主播：10元/100字<br/>
+          知名主播：5元/100字<br/>
+          优质主播：2元/100字</p>
+        <p>男、女声、风格特点等都不影响计费。</p>
+        <p>其他计费计算规则：</p>
+        <p>500字起录，不足500字按照500字计算。
+          字数计算按照直接入1位的方式计算有多少百字，即523字按照600字计算。
+          需要加急配音价格为基础价格的2倍。</p>
+      </a-modal>
     </div>
-    <div class="add_right">
-      <div class="right_title">
-        <span class="title_sign"> </span>
-        <span class="title_title">配音要求</span>
-      </div>
-      <!--选择性别-->
-      <div class="right_gender">
-        <p class="gender_title"><span class="color">*</span>性别要求</p>
-        <div class="gender_choose">
-          <a-radio-group class="gender_radio"
-                         name="radioGroup"
-                         v-model="gender"
-                         size="small">
-            <a-radio :value=1>男</a-radio>
-            <a-radio :value=2>女</a-radio>
-          </a-radio-group>
-        </div>
-      </div>
-      <!--选择语速-->
-      <div class="right_speed">
-        <p class="gender_title"><span class="color">*</span>期望语速</p>
-        <div class="gender_choose">
-          <a-radio-group class="gender_radio"
-                         name="radioGroup"
-                         v-model="speed"
-                         size="small">
-            <a-radio :value=0>慢速</a-radio>
-            <a-radio :value=1>标准</a-radio>
-            <a-radio :value=2>快速</a-radio>
-          </a-radio-group>
-        </div>
-      </div>
-      <!--选择风格-->
-      <div class="right_style">
-        <p class="gender_title"><span class="color">*</span>期望风格</p>
-        <div class="gender_choose">
-          <a-radio-group class="gender_radio"
-                         name="radioGroup"
-                         v-model="style"
-                         size="small">
-            <a-radio value="新闻播报">新闻播报</a-radio>
-            <a-radio value="大气稳重">大气稳重</a-radio>
-            <a-radio value="家常聊天">家常聊天</a-radio>
-            <a-radio value='激昂气势'>激昂气势</a-radio>
-            <a-radio value='悠扬抒情'>悠扬抒情</a-radio>
-            <a-radio value='动感活力'>动感活力</a-radio>
-            <a-radio value='庄重威严'>庄重威严</a-radio>
-            <a-radio value='冷淡感性'>冷淡感性</a-radio>
-            <a-radio value='走心煽情'>走心煽情</a-radio>
-            <a-radio value='浑厚沧桑'>浑厚沧桑</a-radio>
-            <a-radio value='甜美可爱'>甜美可爱</a-radio>
-            <a-radio value='纯真童声'>纯真童声</a-radio>
-          </a-radio-group>
-        </div>
-      </div>
-      <!--主播等级-->
-      <div class="right_speed">
-        <p class="gender_title"><span class="color">*</span>主播等级</p>
-        <div class="gender_choose">
-          <a-radio-group class="gender_radio"
-                         name="radioGroup"
-                         v-model="level"
-                         @change="chooseLevel"
-                         size="small">
-            <a-radio :value=0>优质主播</a-radio>
-            <a-radio :value=1>专业主播</a-radio>
-            <a-radio :value=2>知名主播</a-radio>
-          </a-radio-group>
-        </div>
-      </div>
-      <!--是否试音-->
-      <div class="right_speed">
-        <p class="gender_title"><span class="color">&nbsp;</span>是否试音</p>
-        <div class="gender_choose">
-          <a-radio-group class="gender_radio"
-                         name="radioGroup"
-                         v-model="tryAudio"
-                         :defaultValue="tryAudio"
-                         disabled
-                         size="small">
-            <a-radio :value=0>试音</a-radio>
-          </a-radio-group>
-        </div>
-      </div>
-      <!--试音要求-->
-      <div class="right_speed">
-        <p class="gender_title"><span class="color">*</span>试音要求</p>
-        <div class="gender_choose">
-          <a-input v-model="demoRequirement" placeholder="简单描述您的配音要求，少于50字" maxlength="50"/>
-        </div>
-      </div>
-      <!--试音文稿-->
-      <div class="right_text">
-        <p class="gender_title"><span class="color">*</span>试音文稿</p>
-        <div class="gender_choose">
-          <a-textarea
-            class="text_textarea"
-            v-model="tryText"
-            placeholder="请输入正文"
-            style="font-size: 14px"
-            maxlength="150"
-            :autosize="{ minRows: 5, maxRows: 5}" />
-        </div>
-      </div>
-      <!--试音期限-->
-      <div class="right_speed" style="margin-top: 30px">
-        <p class="gender_title"><span class="color">*</span>试音期限</p>
-        <div class="gender_choose">
-          <a-select placeholder="请选择试音期限"
-                    @change="ChangeTime"
-                    style="width: 100%">
-            <a-select-option :value=2>2小时</a-select-option>
-            <a-select-option :value=4>4小时</a-select-option>
-            <a-select-option :value=10>10小时</a-select-option>
-            <a-select-option :value=24>24小时</a-select-option>
-          </a-select>
-        </div>
-      </div>
-      <p class="right_publish" @click="addDemand">发布</p>
-    </div>
-    <a-modal title="快捷配音计费方式" v-model="visible" @ok="handleOk" cancelText="关闭" okText="确定">
-      <p>主播基本价格：</p>
-      <p>顶级主播：10元/100字<br/>
-        知名主播：5元/100字<br/>
-        优质主播：2元/100字</p>
-      <p>男、女声、风格特点等都不影响计费。</p>
-      <p>其他计费计算规则：</p>
-      <p>500字起录，不足500字按照500字计算。
-        字数计算按照直接入1位的方式计算有多少百字，即523字按照600字计算。
-        需要加急配音价格为基础价格的2倍。</p>
-    </a-modal>
   </div>
+
 </template>
 
 <script>
   import PageLayout from '@/layout/PageLayout'
+  import Exception from '../exception/500'
+  import {handlerError} from 'api/catch'
   import axios from 'axios'
   const styleOption = [
     '新闻播报', '大气稳重', '家常聊天',
@@ -213,9 +219,10 @@
     '庄重威严', '冷淡感性', '走心煽情',
     '浑厚沧桑', '甜美可爱', '纯真童声',]
   export default {
-    components: {PageLayout},
+    components: {PageLayout,Exception},
     data() {
       return {
+        error:0,
         styleOption,
         styleDesable:[],
         demandPrice:0,
@@ -257,6 +264,9 @@
             const errorStatus = err.response.status
             if(errorStatus == '500'){
               this.error = 1
+            }else if(errorStatus == '401'){
+              this.$router.replace('/login')
+              localStorage.removeItem('user');
             }else{
               handlerError(err.response.data)
             }
@@ -275,6 +285,9 @@
             const errorStatus = err.response.status
             if(errorStatus == '500'){
               this.error = 1
+            }else if(errorStatus == '401'){
+              this.$router.replace('/login')
+              localStorage.removeItem('user');
             }else{
               handlerError(err.response.data)
             }
@@ -302,6 +315,9 @@
             const errorStatus = err.response.status
             if(errorStatus == '500'){
               this.error = 1
+            }else if(errorStatus == '401'){
+              this.$router.replace('/login')
+              localStorage.removeItem('user');
             }else{
               handlerError(err.response.data)
             }
@@ -367,13 +383,16 @@
               name: 'demands_success',
               params:{
                 title:this.title,
-
+                demandPrice:this.demandPrice
               }
             })
           }).catch(err => {
             const errorStatus = err.response.status
             if(errorStatus == '500'){
               this.error = 1
+            }else if(errorStatus == '401'){
+              this.$router.replace('/login')
+              localStorage.removeItem('user');
             }else{
               handlerError(err.response.data)
             }
