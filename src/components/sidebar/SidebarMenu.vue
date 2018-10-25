@@ -63,7 +63,10 @@
         } else if(this.$route.name === 'order' || this.$route.name === 'order_detail') {
           this.selectedMenuItem  = ['order']
           this.openedSubMenu = []
-        } else if(this.$route.name === 'wallet'){
+        } else if(this.$route.name === 'news'){
+          this.selectedMenuItem  = ['news']
+          this.openedSubMenu = []
+        }else if(this.$route.name === 'wallet'){
           this.selectedMenuItem  = ['wallet']
           this.openedSubMenu = []
         } else if(this.$route.name === 'demands_success'){

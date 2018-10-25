@@ -15,7 +15,7 @@
         <span style="color: #000;font-size: 16px">{{this.$route.meta.breadcrumbName}}</span>
         <div class="header-navbar">
           <a @click="toMesList">
-            <a-badge :count="messageTotal" class="header-navbar-item-icon">
+            <a-badge :count="count" class="header-navbar-item-icon"  >
               <a-icon type="bell"/>
             </a-badge>
           </a>
@@ -97,6 +97,13 @@ export default {
   },
   computed: {
      ...mapGetters(['user'])
+  },
+  created() {
+    this.$axios('/api/notification/count').then(res => {
+      this.count = res.data;
+    }).catch(err => {
+      handlerError(err.response.data)
+    })
   },
   mounted(){
 

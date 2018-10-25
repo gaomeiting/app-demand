@@ -258,7 +258,7 @@
           if(this.level == null){
             this.level = 0
           }
-          axios.get('api/customer/demand/price?dubberLevel='+this.level+'&wordCount=' + this.content.length).then(res => {
+          axios.get('/api/customer/demand/price?dubberLevel='+this.level+'&wordCount=' + this.content.length).then(res => {
             this.demandPrice = res.data
           }).catch(err => {
             const errorStatus = err.response.status
@@ -309,7 +309,7 @@
       chooseLevel(value){
         console.log(value.target.value)
         if(this.content.length > 0){
-          axios.get('api/customer/demand/price?dubberLevel='+value.target.value+'&wordCount=' + this.content.length).then(res => {
+          axios.get('/api/customer/demand/price?dubberLevel='+value.target.value+'&wordCount=' + this.content.length).then(res => {
             this.demandPrice = res.data
           }).catch(err => {
             const errorStatus = err.response.status

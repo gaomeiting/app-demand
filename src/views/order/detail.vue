@@ -1,7 +1,7 @@
 <template>
   <div>
-    <Exception v-if="error == 1"></Exception>
-    <div class="order_detail" v-if="error == 0">
+    <Exception v-if="error == 0"></Exception>
+    <div class="order_detail" v-if="error == 1">
       <img src="@/assets/started.png" alt="" v-if="orderMess.status == 0" style="position: absolute;top: 0;right: 0;">
       <img src="@/assets/going.png" alt="" v-if="orderMess.status == 1" style="position: absolute;top: 0;right: 0;">
       <img src="@/assets/over.png" alt="" v-if="orderMess.status == 9" style="position: absolute;top: 0;right: 0;">
@@ -103,7 +103,7 @@
 <script>
   import axios from 'axios'
   import PageLayout from '@/layout/PageLayout'
-  import Exception from '../exception/500'
+  import Exception from 'exception/500'
   import {handlerError} from 'api/catch'
   const tryList = [
     {
@@ -154,13 +154,12 @@
             this.reload()
           }).catch(err => {
             const errorStatus = err.response.status
-            if(errorStatus == '500'){
-              this.error = 1
-            }else if(errorStatus == '401'){
+            if(errorStatus == '401'){
               this.$router.replace('/login')
               localStorage.removeItem('user');
-            }else{
-              handlerError(err.response.data)
+            }
+            if(errorStatus == '500'){
+              this.error = 1
             }
           })
         }
