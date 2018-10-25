@@ -2,7 +2,7 @@
  * @Author: Cicy 
  * @Date: 2018-10-23 10:40:24 
  * @Last Modified by: Cicy.gao
- * @Last Modified time: 2018-10-23 16:49:07
+ * @Last Modified time: 2018-10-24 16:03:58
  */
 <template>
     <div class="page">
@@ -12,29 +12,16 @@
         </div>
         <div class="form-wrap">
             <span>&nbsp;</span>
-            <figure>
+            <figure :style="'background-image: url('+user.avatar+');'">
             </figure>
             <p>
                 <label> <strong>·</strong>姓名</label>
                 <input type="text" placeholder="请输入真实姓名" v-model="form.name" @change="checkRules(0)">
             </p>
-            <!-- <transition name="fadePage" mode="out-in"> -->
+            <transition name="fadePage" mode="out-in">
                 <p v-if="error[0]" class="error"> {{error[0].msg}} </p>
-            <!-- </transition> -->
-            <p>
-                <label>邮箱</label>
-                <input type="text" placeholder="请输入真实邮箱" v-model="form.email" @input="checkRules(1)">
-            </p>
-            <!-- <transition name="fadePage" mode="out-in"> -->
-                <p v-if="error[1]" class="error"> {{error[1].msg}} </p>
-            <!-- </transition> -->
-            <p>
-                <label>QQ</label>
-                <input type="text" placeholder="请输入QQ号" v-model="form.qq" @input="checkRules(2)">
-            </p>
-            <!-- <transition name="fadePage" mode="out-in"> -->
-                <p v-if="error[2]" class="error"> {{error[2].msg}} </p>
-            <!-- </transition> -->
+            </transition>
+            
             <p>
                 <label><strong>·</strong>手机</label>
                 <input type="tel" placeholder="请输入手机号" v-model="form.mobile" @input="checkRules(3)">
@@ -45,20 +32,35 @@
             <p>
                 <label><strong>·</strong>验证</label>
                 <input type="text" placeholder="请输入验证码" v-model="form.code" @input="checkRules(4)">
-                <a href="javascrip:;" class="btn active">获取验证码</a>
+                <a href="javascrip:;" class="btn" :class="{'active' : tip === '获取验证码'}" @click.stop="getCode">{{tip}}</a>
                 
             </p>
             <transition name="fadePage" mode="out-in">
                 <p v-if="error[4]" class="error"> {{error[4].msg}} </p>
             </transition>
-            <a href="javascrip:;" class="btn active" @click="submit">确认</a>
+            <p>
+                <label>邮箱</label>
+                <input type="text" placeholder="请输入真实邮箱" v-model="form.email" @input="checkRules(1)">
+            </p>
+            <transition name="fadePage" mode="out-in">
+                <p v-if="error[1]" class="error"> {{error[1].msg}} </p>
+            </transition>
+            <p>
+                <label>QQ</label>
+                <input type="text" placeholder="请输入QQ号" v-model="form.qq" @input="checkRules(2)">
+            </p>
+            <transition name="fadePage" mode="out-in">
+                <p v-if="error[2]" class="error"> {{error[2].msg}} </p>
+            </transition>
+            <a href="javascrip:;" class="btn" :class="{'active': submitBtnActive}" @click="submit">确认</a>
         </div>
         
     </div>
 </template>
 
 <script>
-
+import { handlerError } from 'api/catch';
+import { mapGetters, mapMutations } from 'vuex';
 export default {
   data(){
     return{
@@ -69,15 +71,87 @@ export default {
             mobile: '',
             code: ''
         },
-        error: []
+        error: [],
+        timer: null,
+        tip: '获取验证码',
+        flag: true,
+        redirect: ''
     }
+  },
+  computed: {
+      submitBtnActive() {
+          return this.form.mobile && this.form.code && this.form.name
+      },
+      ...mapGetters(['user'])
+  },
+  created() {
+      this.redirect = this.$router.params.redirect || ''
   },
 methods: {
   submit() {
-      this.checkForm();
-       
+      let flag = this.checkForm();
+       if(flag) {
+           this.$axios.post('/api/customer', {
+                   realname: this.form.name,
+                   email: this.form.email,
+                   qq: this.form.qq,
+                   mobile: this.form.mobile,
+                   vcode: this.form.code
+            }).then(res => {
+               //页面跳转
+               this.setLogin(res.data)
+               if(this.redirect) {
+                   this.$router.push(this.redirect);
+               }
+               else {
+                   this.$router.push('/')
+               }
+           }).catch(err => {
+               handlerError(err.response.data)
+           })
+       }
   },
-  
+  getCode() {
+        if(/^1[34578]\d{9}$/.test(this.form.mobile) == false){
+             this.$message.warning('请填写正确的手机号码')
+        }else{
+            //禁止重复点击
+            if(!this.flag) {
+                this.$message.warning('请求已发送请不要重复点击')
+                return;
+            }
+            
+            this.$axios.post('/api/user/bind/mobile/vcode', {
+                mobile: this.form.mobile
+            }).then(() => {
+                this.flag = false;
+                this._timer();
+                this.$message.warning('验证码发送成功')
+            }).catch(err => {
+                handlerError(err.response.data);
+            })
+            
+        }
+    },
+    
+    _timer() {
+        let time = 60;
+        clearInterval(this.timer);
+        this.timer = setInterval(() => {
+            if(time<= 0) {
+                time = 0;
+                if(this.timer) clearInterval(this.timer);
+                return;
+            }
+            time--;
+            this.tip = `${time}s`
+            if(time < 1) {
+                clearInterval(this.timer)
+                this.tip="获取验证码"
+                this.flag=true;
+            }
+        },1000)
+    },
   checkRules(index) {
       let error = this.error
       switch (index) {
@@ -90,7 +164,6 @@ methods: {
                   error[0] = null
               }
               this.error = error;
-              console.log("submit", this.error)
               break;
             case 1:
                  if(this.form.email && (/^[a-zA-Z0-9_.-]+@[a-zA-Z0-9-]+(\.[a-zA-Z0-9-]+)*\.[a-zA-Z0-9]{2,6}$/.test(this.form.email) == false) ) {
@@ -137,25 +210,33 @@ methods: {
       
   },
   checkForm() {
+      let flag = true;
       this.error = [];
         if(/^[\u0391-\uFFE5\w]+$/.test(this.form.name) == false) {
             this.error[0] = {msg: '请输入真实姓名'}
-            
+            flag = false;
         }
         if(this.form.email && (/^[a-zA-Z0-9_.-]+@[a-zA-Z0-9-]+(\.[a-zA-Z0-9-]+)*\.[a-zA-Z0-9]{2,6}$/.test(this.form.email) == false) ) {
             this.error[1] = {msg: '请填写正确的邮箱格式'}
-            
+            flag = false;
         }
         if(this.form.qq && (/^[1-9]\d{4,9}$/.test(this.form.qq) == false)) {
             this.error[2] = {msg: '请填写正确的qq格式'}
+            flag = false;
         }
         if(/^1[34578]\d{9}$/.test(this.form.mobile) == false) {
             this.error[3] = {msg: '请填写正确的手机号码'}
+            flag = false;
         }
         if(!this.form.code) {
             this.error[4] ={ msg: '验证码不能为空'}
+            flag = false;
         }
-  }
+        return flag;
+  },
+  ...mapMutations({
+      'setLogin': 'SET_LOGIN'
+  })
 },
   components: {
   }
@@ -193,7 +274,7 @@ methods: {
         width: 66px;
         height: 66px;
         border-radius: 50%;
-        background-image: url('https://ss1.baidu.com/-4o3dSag_xI4khGko9WTAnF6hhy/image/h%3D300/sign=047b418c923df8dcb93d8991fd1072bf/aec379310a55b3199f70cd0e4ea98226cffc173b.jpg');
+        
         background-size: cover;
         background-position: center top;
         background-repeat: no-repeat;
@@ -236,6 +317,11 @@ methods: {
             font-size: $font-size-medium;
             margin: 0;
             margin-left: 20px;
+            color: $color-text-l;
+            transition: 0.3s;
+            &.active {
+                color: $color-text-l;
+            }
         }
     }
     .btn {
@@ -247,6 +333,8 @@ methods: {
         font-size: $font-size-medium-x;
         background-color: $color-background;
         margin: 0 46px;
+        color: $color-text-l;
+        transition: 0.3s;
         &.active {
             background-color: $color-theme-d;
             color: $color-text-l;
