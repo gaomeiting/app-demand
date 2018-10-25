@@ -16,6 +16,7 @@ Vue.config.productionTip = false;
 Vue.prototype.$axios = axios
 Vue.prototype.$message = message
 
+
 new Vue({
   router,
   store,

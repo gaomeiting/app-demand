@@ -16,11 +16,11 @@
                     <div class="list-title">
                         全部通知
                     </div>
-                    <div class="list-content">
+                    <div class="list-content" v-if="list.length > 0 && !loading">
                         <ul>
                             <li v-for="(item, index) in list" :key="index">
                                 <figure>
-                                    <img src="/header.png" >
+                                    <img src="/customer/publicImages/header.png" >
                                 </figure>
                                 <div class="info-wrap">
                                     <h3>叮当配官方</h3>
@@ -36,7 +36,7 @@
                             </li>
                         </ul>
                     </div>
-                    <div class="pagination-wrap" v-if="list.length>0">
+                    <div class="pagination-wrap" v-if="list.length>0 && !loading">
                         <a-pagination size="small" :total="total" :current="current" :defaultPageSize="size" showQuickJumper :showTotal="total => `总共 ${total} 条`" @change="onChange" />
                     </div>
                     <div class="no-result-wrap" v-if="list.length == 0 && !loading">
