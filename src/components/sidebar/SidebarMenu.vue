@@ -64,6 +64,9 @@
         } else if(this.$route.name === 'wallet'){
           this.selectedMenuItem  = ['wallet']
           this.openedSubMenu = []
+        } else if(this.$route.name === 'demands_success'){
+          this.selectedMenuItem  = ['demands_fast']
+          this.openedSubMenu = []
         } else {
           const routeNameArray = this.$route.name.split('_', 3)
           this.selectedMenuItem.splice(0, 1, routeNameArray[0] + '_' + routeNameArray[1])

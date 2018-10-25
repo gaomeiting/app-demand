@@ -1,6 +1,6 @@
 /*
- * @Author: Cicy 
- * @Date: 2018-10-23 09:51:21 
+ * @Author: Cicy
+ * @Date: 2018-10-23 09:51:21
  * @Last Modified by: Cicy.gao
  * @Last Modified time: 2018-10-23 18:23:40
  */
@@ -61,7 +61,7 @@ const routes = [
           component: () => import("@/views/order/index.vue"),
         },
         {
-          path: '/order/detail',
+          path: '/order/:id',
           name: 'order_detail',
           meta: {breadcrumbName: '订单详情', requireAuth: true},
           component: () => import("@/views/order/detail.vue"),
@@ -85,9 +85,15 @@ const routes = [
               meta: {breadcrumbName: '项目需求', requireAuth: true},
               component: () => import('@/views/demands/project.vue')
             },
+            {
+              path: '/demands/project',
+              name: 'demands_success',
+              meta: {breadcrumbName: '订单支付', requireAuth: true},
+              component: () => import('@/views/demands/success.vue')
+            },
           ]
         },
-        
+
       ]
     },
     {

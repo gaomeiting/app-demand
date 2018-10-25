@@ -1,12 +1,43 @@
 <template>
   <div>
-    <router-link to="/order/detail">123</router-link>
     <Exception v-if="error == 1"></Exception>
     <div class="fast" v-if="error == 0">
       <a-table :columns="columns"
                rowKey="id"
                :dataSource="orderList"
                :pagination="pagination">
+        <span slot="id"
+              slot-scope="id"
+              style="cursor: pointer"
+              @click="showOrderDetail(id)">
+          {{id}}
+        </span>
+        <span slot="type"
+              slot-scope="type">
+          快捷配音
+        </span>
+        <span slot="income"
+              slot-scope="income">
+          {{income}}元
+        </span>
+        <div slot="payment"
+              slot-scope="payment">
+          <span v-if="payment == 1">待支付</span>
+          <span v-if="payment == 2">已支付</span>
+        </div>
+        <div slot="status"
+             slot-scope="status">
+          <span v-if="status == 0">待支付</span>
+          <span v-if="status == 1">进行中</span>
+          <span v-if="status == 9">已完成</span>
+          <span v-if="status == 2">修改中</span>
+          <span v-if="status == 8">已取消</span>
+        </div>
+        <span slot="click"
+              slot-scope="click"
+              style="background: #ffe799;padding: 5px 15px;border-radius: 4px;font-size: 12px;cursor: pointer">
+          下载
+        </span>
       </a-table>
     </div>
   </div>
@@ -19,10 +50,10 @@
   const columns = [
     { title: '订单号', dataIndex: 'id', key: 'id', scopedSlots: { customRender: 'id' }},
     { title: '订单', dataIndex: 'title', key: 'title', scopedSlots: { customRender: 'title' }},
-    { title: '订单类型', dataIndex: 'incomeFrom', key: 'incomeFrom', scopedSlots: { customRender: 'incomeFrom' }},
+    { title: '订单类型', dataIndex: 'type', key: 'type', scopedSlots: { customRender: 'type' }},
     { title: '订单金额', dataIndex: 'income', key: 'income', scopedSlots: { customRender: 'income' }},
-    { title: '支付状态', dataIndex: 'status', key: 'status' , scopedSlots: { customRender: 'status' }},
-    { title: '配音状态', dataIndex: 'deliveryTime', key: 'deliveryTime'},
+    { title: '支付状态', dataIndex: 'payment', key: 'payment' , scopedSlots: { customRender: 'payment' }},
+    { title: '配音状态', dataIndex: 'status', key: 'status', scopedSlots: { customRender: 'status' }},
     { title: '操作' , key: 'click' , scopedSlots: { customRender: 'click' }}
   ];
   export default {
@@ -89,10 +120,19 @@
         })
 
       },
+      showOrderDetail(id){
+        this.$router.push({
+          name: 'order_detail',
+          params: {
+            id:id,
+          }
+        })
+      },
     },
     mounted(){
-      /*axios.get('api/order?status').then(res => {
+      axios.get('api/customer/order').then(res => {
         this.orderList = res.data.data
+        console.log(res.data)
       }).catch(err => {
         const errorStatus = err.response.status
         if(errorStatus == '500'){
@@ -100,7 +140,7 @@
         }else{
           handlerError(err.response.data)
         }
-      })*/
+      })
     },
   }
 

@@ -46,13 +46,14 @@
             <a-radio-group class="identity_radio"
                            name="radioGroup"
                            v-model="identity"
+                           @change="chooseIdentity"
                            size="small">
               <a-radio :value=1>个人</a-radio>
               <a-radio :value=2>公司</a-radio>
             </a-radio-group>
             <a-input
               v-if="identity == 2"
-              class="identity_innput"
+              class="identity_innput title_input"
               v-model="company"
               maxlength="50"
               style="font-size: 14px;width: 55%;"
@@ -102,7 +103,7 @@
       </div>
       <!--选择风格-->
       <div class="right_style">
-        <p class="gender_title"><span class="color">&nbsp;</span>期望风格</p>
+        <p class="gender_title"><span class="color">*</span>期望风格</p>
         <div class="gender_choose">
           <a-radio-group class="identity_radio"
                          name="radioGroup"
@@ -175,15 +176,17 @@
       <div class="right_speed" style="margin-top: 30px">
         <p class="gender_title"><span class="color">*</span>试音期限</p>
         <div class="gender_choose">
-          <a-select placeholder="请选择试音期限" style="width: 100%" @change="changeTime">
-            <a-select-option :value=1>2小时</a-select-option>
-            <a-select-option :value=2>4小时</a-select-option>
-            <a-select-option :value=3>10小时</a-select-option>
-            <a-select-option :value=4>24小时</a-select-option>
+          <a-select placeholder="请选择试音期限"
+                    @change="ChangeTime"
+                    style="width: 100%">
+            <a-select-option :value=2>2小时</a-select-option>
+            <a-select-option :value=4>4小时</a-select-option>
+            <a-select-option :value=10>10小时</a-select-option>
+            <a-select-option :value=24>24小时</a-select-option>
           </a-select>
         </div>
       </div>
-      <p class="right_publish">发布</p>
+      <p class="right_publish" @click="addDemand">发布</p>
     </div>
     <a-modal title="快捷配音计费方式" v-model="visible" @ok="handleOk" cancelText="关闭" okText="确定">
       <p>主播基本价格：</p>
@@ -201,6 +204,7 @@
 
 <script>
   import PageLayout from '@/layout/PageLayout'
+  import axios from 'axios'
   const styleOption = [
     '新闻播报', '大气稳重', '家常聊天',
     '激昂气势', '悠扬抒情', '动感活力',
@@ -221,7 +225,9 @@
         tryAudio:0,
         company:'',
         deliveryTime:'',
+        bidTime:'',
         level:'',
+        requirementTitle:1,
         tryText:'',
         changeUseful:null,
         visible:false,
@@ -234,13 +240,107 @@
       handleOk(){
         this.visible = false
       },
-      onChangeTitle(){},
-      chooseDeliveryTime(date, dateString){},
-      styleChange(){
-
+      //选择身份
+      chooseIdentity(){
+        console.log(this.identity)
+        if(this.identity == 2){
+          axios.get('api/customer/company').then(res => {
+            if(res.data != ''){
+              this.company = res.data
+            }
+          }).catch(err => {
+            const errorStatus = err.response.status
+            if(errorStatus == '500'){
+              this.error = 1
+            }else{
+              handlerError(err.response.data)
+            }
+          })
+        }
       },
-      changeTime(){}
+      onChangeTitle(value){
+        console.log(value)
+        if(value){
+          this.requirementTitle = 1
+        }else{
+          this.requirementTitle = 0
+        }
+      },
+      //交付时间
+      chooseDeliveryTime(date, dateString){
+        this.deliveryTime = dateString + ' 00:00:00'
+      },
+      ChangeTime(value){
+        const myDate = value*3600000
+        const currTime = new Date().getTime();
+        const time = new Date( myDate+currTime )
+        this.bidTime = time.toLocaleString()
+      },
+      styleChange(value){
+        const arr = []
+        arr.push(value.target.value)
+        this.style = arr
+        console.log(this.style)
+      },
+
+      addDemand(){
+        const data = {
+          'title' : this.title,
+          'content' : this.content,
+          'voiceStyle' : this.style,
+          'voiceSpeed' : this.speed,
+          'requiredGender' : this.gender,
+          'dubberLevel' : this.level,
+          'requiredDemo' : 1,
+          'demoRequirement' : this.title,
+          'deliveryTime' : this.deliveryTime,
+          'bidTime' : this.bidTime,
+          'demoContent' : this.tryText,
+          'requirementTitle' : this.requirementTitle,
+          'income' : 1230,
+          'type' : this.identity,
+          'publishScope' : 0,
+        }
+        console.log(data)
+        axios.post('api/customer/demand',data).then(res => {
+          this.$router.push({
+            name: 'demands_success',
+          })
+        }).catch(err => {
+          const errorStatus = err.response.status
+          if(errorStatus == '500'){
+            this.error = 1
+          }else{
+            handlerError(err.response.data)
+          }
+        })
+        /**/
+      },
     }
+  }
+  Date.prototype.toLocaleString = function() {
+    const y = this.getFullYear()
+    let m = this.getMonth() + 1
+    if(m < 10){
+      m = '0' + m
+    }
+    let d = this.getDate()
+    if(d < 10){
+      d = '0' + d
+    }
+    let h = this.getHours()
+    if(h < 10){
+      h = '0' + h
+    }
+    let f = this.getMinutes()
+    if(f < 10){
+      f = '0' + f
+    }
+    let s = this.getSeconds()
+    if(s < 10){
+      s = '0' + s
+    }
+    return y + "-" + m + "-" + d + " " + h + ":" + f + ":" + s;
   }
 </script>
 <style lang="scss" scoped>
@@ -358,6 +458,7 @@
           margin-top: 30px;
           display: flex;
           justify-content: space-between;
+          line-height: 40px;
           .identity_title{
             height: 40px;
             line-height: 40px;
@@ -425,12 +526,6 @@
           width: 80%;
           display: flex;
           align-items: center;
-         /* .identity_radio{
-            width: 45%;
-          }
-          .identity_innput{
-
-          }*/
         }
 
       }
@@ -454,12 +549,6 @@
           width: 80%;
           display: flex;
           align-items: center;
-          /* .identity_radio{
-             width: 45%;
-           }
-           .identity_innput{
-
-           }*/
         }
 
       }
@@ -483,12 +572,6 @@
           width: 80%;
           display: flex;
           align-items: center;
-          /* .identity_radio{
-             width: 45%;
-           }
-           .identity_innput{
-
-           }*/
         }
 
       }
@@ -536,6 +619,9 @@
         color: #333333;
         line-height: 42px;
         text-align: center;
+        &:hover{
+          cursor: pointer;
+        }
       }
     }
   }

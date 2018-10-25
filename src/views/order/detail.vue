@@ -1,103 +1,96 @@
 <template>
   <div class="order_detail">
-    <img src="@/assets/going.png" alt="" style="position: absolute;top: 0;right: 0;">
+    <img src="@/assets/started.png" alt="" v-if="orderMess.status == 0" style="position: absolute;top: 0;right: 0;">
+    <img src="@/assets/going.png" alt="" v-if="orderMess.status == 1" style="position: absolute;top: 0;right: 0;">
+    <img src="@/assets/over.png" alt="" v-if="orderMess.status == 9" style="position: absolute;top: 0;right: 0;">
+    <img src="@/assets/change.png" alt="" v-if="orderMess.status == 2" style="position: absolute;top: 0;right: 0;">
     <div class="title">
-      <span class="title_name">标题字数测试标题字数测试标题字数测试标题字数测试标题字数测试标题字数测试标题字数测试标</span>
+      <span class="title_title">标题：</span>
+      <span class="title_name">{{orderMess.title}}</span>
+      <p class="dowload">
+        <span style="font-size: 14px;margin-top: 15px">￥</span>
+        {{orderMess.income}}
+      </p>
     </div>
     <div class="ask">
+      <span class="ask_title">要求：</span>
       <div class="ask_list">
-        <span class="each_ask" >不限</span>
-        <span class="each_ask">voiceStyle</span>
-        <span class="each_ask">快速</span>
-        <span class="each_ask">读标题</span>
+        <div class="ask_list">
+          <span class="each_ask" v-if="orderMess.requiredGender == 0">不限</span>
+          <span class="each_ask" v-if="orderMess.requiredGender == 1">男</span>
+          <span class="each_ask" v-if="orderMess.requiredGender == 0">女</span>
+          <span class="each_ask">{{voiceStyle}}</span>
+          <span class="each_ask" v-if="orderMess.voiceSpeed == 1">标准</span>
+          <span class="each_ask" v-if="orderMess.voiceSpeed == 0">慢速</span>
+          <span class="each_ask" v-if="orderMess.voiceSpeed == 2">快速</span>
+          <span class="each_ask" v-if="orderMess.requirementTitle == 0">读标题</span>
+          <span class="each_ask" v-if="orderMess.requirementTitle == 1">不读标题</span>
+        </div>
       </div>
     </div>
     <div class="text">
-      <span class="text_text" v-show="!isAllText">text
-        <span class="click_all" @click="showAllText">查看全部 >></span>
+      <span class="text_title">文稿：</span>
+      <span class="text_text" v-show="!isAllText">{{text}}
+        <span class="click_all" v-if="text.length > 150" @click="showAllText">查看全部 >></span>
       </span>
-      <span class="text_text" v-show="isAllText">allText
-        <span class="click_all" @click="showShortText">收起 >></span>
+      <span class="text_text" v-show="isAllText">{{allText}}
+        <span class="click_all" v-if="text.length > 150 "@click="showShortText">收起 >></span>
       </span>
     </div>
     <p class="demands_title"><span class="color">&nbsp;</span>交付记录</p>
     <div class="demands_list">
-      <!--<a-list itemLayout="horizontal" :dataSource="tryList">
+      <a-list itemLayout="horizontal" :dataSource="deliveryList">
         <a-list-item slot="renderItem" slot-scope="item, index">
           <div class="list_item">
             <div class="header">
               <a-avatar slot="avatar"
                         class="avatar"
-                        src="@/assets/logo.png"/>
+                        :src="item.avatar"/>
               <div class="message">
-                <p slot="title" class="mess_title">{{item.nickname}}</p>
-                <p class="time">item.creatTime</p>
-              </div>
-            </div>
-            <div class="middle">
-              <p class="middle_text">上传了音频</p>
-              <div class="middle_icons">
-                <p><a-icon type="download" class="icon_icon" />下载</p>
-                <p class=icon_green><a-icon type="like-o" class="icon_icon" />满意</p>
-                <p class="icon_red"><a-icon type="dislike-o" class="icon_icon" />不满意</p>
-              </div>
-            </div>
-            <div class="content">
-              <a-icon type="caret-up" class="up_icon" />
-              <div class="header">
-                <a-avatar slot="avatar"
-                          class="avatar"
-                          src="http://st.ddpei.cn/avatar/BhTrDkWK6TvikB8jZvnRXj.png" />
-                <div class="message">
-                  <p slot="title" class="header_mes_title">叮当配</p>
-                  <p class="time">item.replayTime</p>
+                <p slot="title" class="mess_title">{{item.nickname}}<span>{{item.creatTime}}</span></p>
+                <div class="middle">
+                  <p class="middle_text">上传了音频</p>
+                  <div class="middle_icons">
+                    <p class="icon_download" @click="downLoad(item.voiceUrl)"><a-icon type="download" class="icon_icon" />下载</p>
+                    <!--不满意初始状态-->
+                    <div class="icon" @click="noWell" v-if="item.status == 0">
+                      <a-icon type="dislike-o" class="icon_icon" />
+                      <a-modal
+                        title="意见反馈"
+                        v-model="visibleNo"
+                        @ok="sureOpinion(item.id)"
+                        okText="确认"
+                        cancelText="取消">
+                        <div>
+                          <a-input v-model="opinion" placeholder="请输入对该音频不满意的理由，配音员会重新录制"/>
+                        </div>
+                      </a-modal>
+                      <span class="icon_text">不满意</span>
+                    </div>
+                    <!--不满意选中状态-->
+                    <div class="icon" v-if="item.status == 1">
+                      <a-icon type="dislike-o" class="icon_icon" style="color: red;" />
+                      <span class="icon_text" style="color: red;">不满意</span>
+                    </div>
+                  </div>
                 </div>
               </div>
-              <p class="opinion">item.replay</p>
+            </div>
+            <!--满意，不满意评论显示-->
+            <div class="content" v-if="item.status == 1">
+              <a-icon type="caret-up" class="up_icon" />
+              <div class="con_header">
+                <a-avatar slot="avatar"
+                          class="con_avatar"
+                          src="http://st.ddpei.cn/avatar/BhTrDkWK6TvikB8jZvnRXj.png" />
+                <div class="con_message">
+                  <p slot="title" class="header_mes_title">叮当配</p>
+                  <p class="time">{{item.replayTime}}</p>
+                </div>
+              </div>
+              <p class="opinion">{{item.replay}}</p>
             </div>
           </div>
-        </a-list-item>
-      </a-list>-->
-      <a-list itemLayout="horizontal"
-              rowKey="id"
-              :dataSource="tryList"
-              :grid="{ gutter: 15,column:3 }">
-        <a-list-item slot="renderItem" slot-scope="item, index" class="item_lists">
-          <a-list-item-meta class="item_meta">
-            <p style="font-size: 16px" slot="title">{{item.nickname}}
-              <span style="margin-left: 15px;font-size: 14px;color: #aeaeae;">2018-08-30 12:30:30</span>
-            </p>
-            <div slot="description" class="item_play" style="margin-top: -5px">
-              <!--播放按钮-->
-              <div class="item_play_icons" @click="toPlay(index)" style="width: 200px;height :27px;background: #e7e7e7;border-radius: 8px;line-height: 27px;cursor: pointer;display: flex">
-                <img src="../../assets/go_play.gif"
-                     class="icon_playing"
-                     style="height: 15px;margin-left: 10px; margin-top:5px; display: none" alt="">
-                <img src="../../assets/play_icon.png"
-                     class="icon_pause"
-                     style="height: 15px;margin-left: 10px; margin-top:5px; display: block" alt="">
-              </div>
-              <!--淘汰与中标-->
-              <div style="display: flex;width: 200px;justify-content: space-between;margin-top: 15px">
-                <a-popconfirm
-                  title="确定让该音频中标吗?"
-                  @confirm="confirm()"
-                  okText="确认"
-                  cancelText="取消">
-                  <p style="margin-bottom:0;text-align:center;color:#aeaeae;background:#dcdadb;width: 90px;line-height: 27px;cursor: pointer;border-radius: 4px">淘汰</p>
-                </a-popconfirm>
-                <a-popconfirm
-                  title="确定淘汰该音频吗?"
-                  @confirm="weedOut()"
-                  okText="确定"
-                  cancelText="取消">
-                  <p style="margin-bottom:0;text-align:center;color:#333333;background:#fecf01;width: 90px;line-height: 27px;cursor: pointer;border-radius: 4px">中标</p>
-                </a-popconfirm>
-              </div>
-            </div>
-            <a-avatar slot="avatar" src="@/assets/logo.png" style="width: 40px;
-height: 40px;border-radius: 50%"/>
-          </a-list-item-meta>
         </a-list-item>
       </a-list>
     </div>
@@ -105,6 +98,7 @@ height: 40px;border-radius: 50%"/>
 </template>
 
 <script>
+  import axios from 'axios'
   import PageLayout from '@/layout/PageLayout'
   const tryList = [
     {
@@ -117,6 +111,13 @@ height: 40px;border-radius: 50%"/>
       return {
         tryList,
         isAllText:false,
+        visibleNo:false,
+        orderMess:{},
+        deliveryList:[],
+        voiceStyle:'',
+        text:'',
+        allText:'',
+        opinion:'',
       }
     },
     methods:{
@@ -126,13 +127,83 @@ height: 40px;border-radius: 50%"/>
       showShortText(){
         this.isAllText = false
       },
-      toPlay(){},
-      confirm(){},
-      weedOut(){},
+      downLoad(url){
+        window.open(url)
+      },
+      noWell(status){
+        this.visibleNo = true
+      },
+      sureOpinion(id){
+        const data = {
+          'status': 1,
+          'reply' : this.opinion,
+        }
+        if(this.opinion == ''){
+          this.$message.error('请输入意见');
+        }else{
+          axios.post('api/customer/order/'+id+'/voice',data).then(res => {
+            this.$message.error('订单不满意，请联系配音员');
+            this.visibleNo = false
+            this.reload()
+          }).catch(err => {
+            const errorStatus = err.response.status
+            if(errorStatus == '401'){
+              this.$router.replace('/login')
+            }
+            if(errorStatus == '500'){
+              this.error = 1
+            }
+          })
+        }
+      },
+    },
+    mounted(){
+      console.log(this.$route.params.id)
+      axios.get('api/customer/order/'+this.$route.params.id+'/detail').then(res => {
+        this.orderMess = res.data
+        this.voiceStyle = this.orderMess.voiceStyle.toString()
+        let text = this.orderMess.content
+        this.allText = text
+        let textNum = text.length
+        if(textNum > 150){
+          this.text = text.substring(0,150) + '...'
+        }else{
+          this.text = text
+        }
+      }).catch(err => {
+        const errorStatus = err.response.status
+        if(errorStatus == '500'){
+          this.error = 1
+        }else{
+          handlerError(err.response.data)
+        }
+      }).catch(err => {
+        const errorStatus = err.response.status
+        if(errorStatus == '401'){
+          this.$router.replace('/login')
+        }
+        if(errorStatus == '500'){
+          this.error = 1
+        }
+      })
+      axios.get('api/order/'+this.$route.params.id+'/delivery').then(res => {
+        this.deliveryList = res.data
+        console.log(this.deliveryList)
+      }).catch(err => {
+        const errorStatus = err.response.status
+        if(errorStatus == '500'){
+          this.error = 1
+        }else{
+          handlerError(err.response.data)
+        }
+      })
     }
   }
 </script>
 <style lang="scss" scoped>
+  p{
+    margin-bottom: 0px;
+  }
   .order_detail{
     position: relative;
     background: #ffffff;
@@ -207,10 +278,100 @@ height: 40px;border-radius: 50%"/>
       }
     }
     .demands_list{
-      .item_lists{
-        margin-top: 20px;
-        .item_meta{
+      .list_item{
+        width: 100%;
+        .header{
+          width: 100%;
+          height: 55px;
+          display: flex;
+          .avatar{
+            width: 55px;
+            height: 55px;
+            border-radius: 50%;
+          }
+          .message{
+            padding: 5px 0;
+            width: 100%;
+            height: 55px;
+            margin-left: 15px;
+            .mess_title{
+              margin-bottom: 0;
+              font-size: 16px;
+              >span{
+                font-size: 14px;
+                margin-left: 10px;
+                color: #aeaeae;
+              }
+            }
+            .middle{
+              margin-top: 5px;
+              width: 100%;
+              display: flex;
+              justify-content: space-between;
+              align-items: center;
+              .middle_text{
+                margin-bottom: 0px;
+              }
+              .middle_icons{
+                display: flex;
+                width: 15%;
+                justify-content: space-between;
+                align-items: center;
+                .icon_download{
+                  margin-bottom: 0px;
+                  &:hover{
+                    cursor: pointer;
+                  }
+                }
+                .icon_green{
+                  color: #00cb00;
+                  margin-bottom: 0px;
+                }
+                .icon_red{
+                  color: red;
+                  margin-bottom: 0px;
+                }
+              }
+            }
+          }
+        }
 
+        .content{
+          padding: 10px;
+          margin-left: 65px;
+          background: #f2f2f2;
+          position: relative;
+          min-height: 85px;
+          margin-top: 20px;
+          border-radius: 4px;
+          .up_icon{
+            position: absolute;
+            top: -8px;
+            left: 25px;
+            color: #f2f2f2;
+          }
+          .con_header{
+            height: 50px;
+            display: flex;
+            .con_avatar{
+              width: 40px;
+              height: 40px;
+            }
+            .con_message{
+              height: 40px;
+              margin-left: 15px;
+
+              .time{
+                font-size: 12px;
+                color: #aeaeae;
+                margin-bottom: 8px;
+              }
+            }
+          }
+          .opinion{
+            margin-left: 55px;
+            margin-top: 5px;
+          }
         }
       }
     }
