@@ -11,10 +11,10 @@
         <span>订单支付</span>
       </h2>
       <div class="title">
-        <p>文稿标题发布成功</p>
+        <p>{{title}}发布成功</p>
       </div>
       <div class="pay-wrap">
-        <h3>应付金额：<strong>1154元</strong></h3>
+        <h3>应付金额：<strong>{{demandPrice}}元</strong></h3>
         <div class="pay">
           <figure>
             <img src="https://ss1.baidu.com/-4o3dSag_xI4khGko9WTAnF6hhy/image/h%3D300/sign=0fd5d24f9f45d688bc02b4a494c27dab/4b90f603738da977f53a9d57bd51f8198618e3b1.jpg">
@@ -26,9 +26,7 @@
             <p>银行卡号：234343555555555555555</p>
           </div>
         </div>
-        <p class="pay-footer">
-          返回我的工作台
-        </p>
+        <p class="pay-footer" @click="toHomePage">返回我的工作台</p>
       </div>
 
     </div>
@@ -42,11 +40,20 @@ import HeadNav from 'components/head-nav/head-nav';
 export default {
   data(){
     return{
+      demandPrice:null,
+      title:'',
     }
   },
-  components: {
-    SideBar,
-    HeadNav
+  methods:{
+    toHomePage(){
+      this.$router.push({
+        name: 'dashboard',
+      })
+    }
+  },
+  mounted(){
+    this.demandPrice = this.$route.params.demandPrice
+    this.title = this.$route.params.title
   }
 }
 </script>
