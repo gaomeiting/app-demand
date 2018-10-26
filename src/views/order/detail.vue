@@ -1,7 +1,7 @@
 <template>
   <div>
-    <Exception v-if="error == 0"></Exception>
-    <div class="order_detail" v-if="error == 1">
+    <Exception v-if="error == 1"></Exception>
+    <div class="order_detail" v-if="error == 0">
       <img src="@/assets/started.png" alt="" v-if="orderMess.status == 0" style="position: absolute;top: 0;right: 0;">
       <img src="@/assets/going.png" alt="" v-if="orderMess.status == 1" style="position: absolute;top: 0;right: 0;">
       <img src="@/assets/over.png" alt="" v-if="orderMess.status == 9" style="position: absolute;top: 0;right: 0;">
