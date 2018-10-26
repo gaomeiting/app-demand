@@ -4,9 +4,12 @@
         <a-icon class="trigger" :type="collapsed ? 'menu-unfold' : 'menu-fold'" v-if="title" @click="()=> collapsed = !collapsed" />
         <span style="color: #000;font-size: 16px" v-if="title">{{title}}</span>
         <div class="header-navbar">
-        <a-badge :count="count" class="header-navbar-item-icon" v-if="!hideUser" @click.stop="goNews">
-            <a-icon type="bell" />
-        </a-badge>
+        <div style="display:inline-block" @click.stop="goNews">
+            <a-badge :count="count" class="header-navbar-item-icon" v-if="!hideUser">
+                <a-icon type="bell" />
+            </a-badge>
+        </div>
+        
         <a-dropdown class="header-navbar-item" v-if="!hideUser">
             <span>
             <a-avatar class="avatar" size="small" shape="circle" :src="user.avatar" style="vertical-align: middle; margin-right: 0.5em;" />
@@ -80,6 +83,9 @@ export default {
         })
     },
     methods: {
+        goNews() {
+            this.$router.push('/news')
+        },
         loginOut({ item, key, keyPath }) {
             if(key != 3) return;
             this.$axios.post('/api/user/signout').then(res => {

@@ -103,6 +103,7 @@ import { audioHandler } from 'assets/js/mixins'
 
 li {
     flex: 0 0 32%;
+    min-width: 320px;
     padding: 16px 0;
     position: relative;
     border-bottom: 1px solid $color-background;
