@@ -45,16 +45,30 @@ export default {
         this.getDemoList()
     },
     methods: {
+        
 		changeSatus(index, item, itemIndex) {
             let status= index ? 'out' : 'in'
             let demandId = item.demandId;
             let dubberId = item.dubberId;
             this.$axios.put(`/api/customer/demand/${demandId}/apply/${dubberId}/${status}`).then(res => {
                 this.list[itemIndex].status = index+1;
+                if(!index) {
+                    //跳转到中标列表页面
+                    this.showConfirm();
+                }
             }).catch(err => {
                 handlerError(err.response.data)
             })
             //console.log(index, item, "as;lfajks;lf")
+        },
+        showConfirm() {
+            let title = '中标人选确定，已为您生成订单'
+            this._showConfirm({
+                title,
+                okFn: () => {
+                    this.$router.push('/order')
+                }
+            })
         },
        getTaskDetails() {
             this.$axios(`/api/customer/demand/${this.id}`).then(res => {
@@ -80,7 +94,20 @@ export default {
                 handlerError(err.response.data)
             })
         },
-        
+        _showConfirm({title, content, okFn}) {
+            this.$confirm({
+                title,
+                content,
+                cancelText: '取消',
+                okText: '确定',
+                onOk() {
+                    if(okFn) {
+                        okFn()
+                    }
+                },
+                onCancel() {},
+            });
+        },
         _normalize(res) {
             let id = this.id;
             let status = res.status;
