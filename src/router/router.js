@@ -2,7 +2,7 @@
  * @Author: Cicy
  * @Date: 2018-10-23 09:51:21
  * @Last Modified by: Cicy.gao
- * @Last Modified time: 2018-10-25 16:39:52
+ * @Last Modified time: 2018-10-26 17:45:12
  */
 import axios from "axios";
 import Vue from "vue";
@@ -12,6 +12,7 @@ import MenuView from '@/layout/MenuView.vue'
 import RouteView from '@/layout/RouteView.vue'
 import PageView from '@/layout/PageView.vue'
 import { handlerError } from 'api/catch';
+import { BASE_URL } from 'api/config';
 Vue.use(Router);
 
 const routes = [
@@ -115,6 +116,10 @@ if (window.localStorage.getItem('user')) {
   let user = JSON.parse(window.localStorage.getItem('user'))
 store.commit('SET_LOGIN', user)
 }
+if (window.localStorage.getItem('status')) {
+  let status = JSON.parse(window.localStorage.getItem('status'))
+      store.commit('SET_STATUS', status)
+}
 const router= new Router({
 routes : routes
 })
@@ -122,12 +127,21 @@ routes : routes
 router.beforeEach((to, from, next) => {
 
 if (to.matched.some(r => r.meta.requireAuth)) {
-    if (store.state.user) {
+    if (store.state.user && store.state.status == 1 ) {
         next();
     }
     else {
       axios('/api/user/userinfo').then(res => {
-        store.commit('SET_LOGIN', res.data);
+        let status = handlerUser(res.data)
+        if(status == 1) {
+          store.commit('SET_STATUS', status)
+          store.commit('SET_LOGIN', res.data);
+        }
+        else {
+          store.commit('SET_LOGOUT');
+          let url = `${BASE_URL}/#/home?showBox=1`;
+          window.location.href= url;
+        }
         next();
       }).catch(err => {
         handlerError(err.response.data)
@@ -138,4 +152,20 @@ else {
     next();
 }
 });
+function handlerUser(data) {
+  
+  if( data.roles.length === 1 && data.roles.includes('anonymous')) {
+      //游客身份 0
+      return 0;
+  }
+  if( (data.roles.includes('customer') ||data.roles.includes('customer-org') || data.roles.includes('customer-person'))) {
+      //需方 1
+      return 1;
+  }
+  if( (data.roles.includes('dubber-person') || data.roles.includes('dubber-team'))) {
+      //配音员 2
+      return 2;
+  }
+  
+}
 export default router
