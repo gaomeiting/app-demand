@@ -103,7 +103,7 @@ import { audioHandler } from 'assets/js/mixins'
 
 li {
     flex: 0 0 32%;
-    min-width: 320px;
+    min-width: 400px;
     padding: 16px 0;
     position: relative;
     border-bottom: 1px solid $color-background;
@@ -123,12 +123,14 @@ li {
         height: 26px;
     }
     > .btn-wrap {
-        position: absolute;
+        /* position: absolute;
         right: 0;
-        top: 0;
+        top: 0; */
+        display: flex;
+        margin: 20px 0 0 44px;
         .btn {
-            display: inline-block;
-            width: 112px;
+            flex: 0 0 50%;
+            width: 50%;
             height: 34px;
             border-radius: 6px;
             text-align: center;
@@ -136,16 +138,16 @@ li {
             font-size: $font-size-medium;
             background-color: $color-btn;
             color: $color-btn-text;
-            margin-left: 10px;
             &.active {
                 background-color: $color-theme-d;
                 color: $color-text-l;
+                margin-right: 10px;
             }
         }
     }
    .title {
         display: flex;
-        align-items: center;
+        /* align-items: center; */
         margin-bottom: 12px;
         .header {
             flex: 0 0 44px;
@@ -156,11 +158,6 @@ li {
             background-size: cover;
             background-position: center center;
             background-repeat: no-repeat;
-            /* img {
-                width: 100%;
-                min-height: 70px;
-
-            } */
         }
         .title-content {
             flex: 1;

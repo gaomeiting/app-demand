@@ -1,7 +1,7 @@
 <template>
     <div class="task-list">
         <ul>
-            <li v-for="(item, index) in list" :key="index" @click.stop="goDetail(item)">
+            <li v-for="(item, index) in list" :key="index" @click.stop="goDetail(item)" v-if="item.status == 1">
                 <!-- <div class="title">
                     <figure class="header">
                         <img src="https://ss3.baidu.com/9fo3dSag_xI4khGko9WTAnF6hhy/image/h%3D300/sign=4766f2309def76c6cfd2fd2bad17fdf6/9e3df8dcd100baa16faa67aa4a10b912c8fc2e18.jpg">

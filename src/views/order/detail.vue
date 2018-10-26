@@ -103,7 +103,7 @@
 <script>
   import axios from 'axios'
   import PageLayout from '@/layout/PageLayout'
-  import Exception from 'exception/500'
+  import Exception from '../exception/500'
   import {handlerError} from 'api/catch'
   const tryList = [
     {

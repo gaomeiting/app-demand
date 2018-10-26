@@ -65,6 +65,7 @@
             height: 44px;
             overflow: hidden;
             border-radius: 50%;
+            margin: 0;
             img {
                 width: 100%;
 
@@ -83,6 +84,7 @@
                     padding-right: 4px;
                     font-size: $font-size-medium-x;
                     color: $color-text-l;
+                    margin: 0;
                     @include ellipsis(1)
                 }
 
@@ -155,7 +157,7 @@
     }
     > .text {
         line-height: 1.5;
-        padding-bottom: 12px;
+        padding: 12px 0;
         border-top: 1px solid $color-background;
     }
 }
