@@ -2,7 +2,7 @@
  * @Author: Cicy 
  * @Date: 2018-10-23 10:40:24 
  * @Last Modified by: Cicy.gao
- * @Last Modified time: 2018-10-25 18:29:32
+ * @Last Modified time: 2018-10-29 17:06:51
  */
 <template>
     <div class="page">
@@ -107,7 +107,7 @@ methods: {
                 this.$success({
                     title: '完善用户信息成功，请扫码登录',
                     onOk() {
-                        let url = `${BASE_URL}/#/home?showBox=1`;
+                        let url = `${BASE_URL}/home.html?showBox=1`;
                         window.location.href= url;
                     }
                 });

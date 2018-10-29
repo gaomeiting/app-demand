@@ -11,7 +11,7 @@ export function handlerError(err) {
     if (err) {
         if(err.status == 401) {
             store.commit('SET_LOGOUT');
-            let url = `${BASE_URL}/#/home?showBox=1`;
+            let url = `${BASE_URL}/home.html?showBox=1`;
            /* window.alert(url) */
             window.location.href= url;
             /* router.replace({

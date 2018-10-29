@@ -90,7 +90,7 @@ export default {
             if(key != 3) return;
             this.$axios.post('/api/user/signout').then(res => {
                 this.setLoginOut()
-                let url = `${BASE_URL}/#/home?showBox=1`;
+                let url = `${BASE_URL}/home.html?showBox=1`;
                 window.location.href= url;
             }).catch(err => {
                 handlerError(err.response.data)

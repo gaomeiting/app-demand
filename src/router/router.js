@@ -117,7 +117,7 @@ if (window.localStorage.getItem('user')) {
 store.commit('SET_LOGIN', user)
 }
 if (window.localStorage.getItem('status')) {
-  let status = JSON.parse(window.localStorage.getItem('status'))
+  let status = JSON.parse(window.localStorage.getItem('status')).status
       store.commit('SET_STATUS', status)
 }
 const router= new Router({
